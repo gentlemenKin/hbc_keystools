@@ -75,7 +75,8 @@ typedef GetRecoveryDart = RSResult Function(
 class NativeLib {
   // Load the dynamic library
   // var libraryPath = path.join(Directory.current.path, 'recovery_tool.dylib');
-  static final DynamicLibrary _dylib = ffi.DynamicLibrary.open(path.join(Directory.current.path, Platform.isMacOS ? 'lib_recovery_tool.dylib' : 'recovery_tool.dll'));
+
+  static final DynamicLibrary _dylib = ffi.DynamicLibrary.open(Platform.isMacOS ? 'lib_recovery_tool.dylib' : 'recovery_tool.dll');
 
   static final GetRSResultDart dartFunction = _dylib.lookupFunction<GetRSResultC, GetRSResultDart>('GetRSResult');
 

@@ -382,6 +382,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         beans: coins,
                         callback: (List<SponsorBean> data) {
                           ///当前选中的所有链
+                          chain = '';
                           if (data.isNotEmpty) {
                             for (var i in data) {
                               chain = chain + i.userName + ',';
@@ -1191,7 +1192,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           EasyLoading.showToast(res.errMsg.toDartString());
                         }
                       }catch(e){
-                        EasyLoading.showToast('RestoredFailed'.tr);
+                        EasyLoading.showToast("erro:$e");
                       }
                     }
                   })),
