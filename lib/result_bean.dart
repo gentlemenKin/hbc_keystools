@@ -28,7 +28,7 @@ class ItemBean{
 });
   factory ItemBean.fromJson(Map<String, dynamic> json) => ItemBean(
     valutIndex: json["VaultIndex"],
-    CoinType: json["CoinType"],
+    CoinType: json["Chain"],
     Address: json['Address'],
     PrivKey: json['PrivKey']
   );

@@ -145,7 +145,7 @@ class SponsorItemWidget extends StatefulWidget {
   State<SponsorItemWidget> createState() => _SponsorItemWidgetState();
 }
 
-class _SponsorItemWidgetState extends State<SponsorItemWidget> with AutomaticKeepAliveClientMixin {
+class _SponsorItemWidgetState extends State<SponsorItemWidget> {
   // final List<String> ids = [];
   bool select = false;
 
@@ -209,8 +209,6 @@ class _SponsorItemWidgetState extends State<SponsorItemWidget> with AutomaticKee
     );
   }
 
-  @override
-  bool get wantKeepAlive => false;
 }
 
 class SponsorBean {

@@ -81,7 +81,8 @@ extern "C" {
 extern char* GetKey(GoString youKey);
 extern int SumTest(GoInt a, GoInt b);
 extern RSResult GetRSResult(GoString s);
-extern RSResult GoRecovery(GoString zipPath, GoString userMnemonic, GoString eciesPrivKey, GoString rsaPrivKey, GoString vaultCount, GoString coinTypes);
+extern char* GetChainList();
+extern RSResult GoRecovery(GoString zipPath, GoString userMnemonic, GoString eciesPrivKey, GoString rsaPrivKey, GoString vaultCount, GoString chains);
 
 #ifdef __cplusplus
 }

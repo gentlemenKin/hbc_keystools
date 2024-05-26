@@ -20,9 +20,9 @@ import 'package:hbc_keystools/widget/text_row_widegt.dart';
 import 'package:tray_manager/tray_manager.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:cross_file/cross_file.dart';
+import 'chain_result_bean.dart';
 import 'local/constant.dart';
 import 'package:path/path.dart' as path;
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -74,13 +74,12 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
       builder: EasyLoading.init(),
-      locale: Locale('en','US'),
+      locale: Locale('en', 'US'),
       translations: TranslationService(),
       fallbackLocale: TranslationService.fallbackLocale,
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
@@ -90,8 +89,6 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
-
 
   final String title;
 
@@ -128,21 +125,21 @@ class _MyHomePageState extends State<MyHomePage> {
   TextEditingController controller23 = TextEditingController();
   TextEditingController controller24 = TextEditingController();
   final List<SponsorBean> coins = [
-    SponsorBean(false, 'BTC', '0'),
-    SponsorBean(false, 'LTC', '2'),
-    SponsorBean(false, 'DOGE', '3'),
-    SponsorBean(false, 'ETH', '60'),
-    SponsorBean(false, 'BCH', '145'),
-    SponsorBean(false, 'TRX', '195'),
-    SponsorBean(false, 'POLYGON', '966'),
-    SponsorBean(false, 'ARBITRUM', '9001'),
-    SponsorBean(false, 'BSC', '714'),
-    SponsorBean(false, 'HECO', '553'),
-    SponsorBean(false, 'APT', '637'),
-    SponsorBean(false, 'SOL', '501'),
-    SponsorBean(false, 'DOT', '354'),
+    // SponsorBean(false, 'BTC', '0'),
+    // SponsorBean(false, 'LTC', '2'),
+    // SponsorBean(false, 'DOGE', '3'),
+    // SponsorBean(false, 'ETH', '60'),
+    // SponsorBean(false, 'BCH', '145'),
+    // SponsorBean(false, 'TRX', '195'),
+    // SponsorBean(false, 'POLYGON', '966'),
+    // SponsorBean(false, 'ARBITRUM', '9001'),
+    // SponsorBean(false, 'BSC', '714'),
+    // SponsorBean(false, 'HECO', '553'),
+    // SponsorBean(false, 'APT', '637'),
+    // SponsorBean(false, 'SOL', '501'),
+    // SponsorBean(false, 'DOT', '354'),
   ];
-  final List<String> lan = ['en','zh'];
+  final List<String> lan = ['en', 'zh'];
   String currentLan = 'en';
   final List<int> walletIndex = [0];
   int currentCoinIndex = -1;
@@ -165,6 +162,21 @@ class _MyHomePageState extends State<MyHomePage> {
       // sum(zipPath, userMnemonic, eciesPrivKey, rsaPrivKey, vaultCount, coinTypes);
     }
   }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    NativeLib().getChainList().then((value){
+      if(value!=null){
+        List resJson = json.decode(value.p.toDartString());
+        List<ChainItemBean> items = resJson.map((e) => ChainItemBean.fromJson(e)).toList();
+        items.forEach((element) {
+          coins.add(SponsorBean(false, element.name, element.valName));
+        });
+      }
+
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -173,7 +185,7 @@ class _MyHomePageState extends State<MyHomePage> {
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 100,vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 100, vertical: 20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -192,7 +204,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: (){
+                    onTap: () {
                       Get.dialog(DialogWidget(
                           padding: EdgeInsets.zero,
                           width: 600,
@@ -202,12 +214,12 @@ class _MyHomePageState extends State<MyHomePage> {
                             callback: (String data) {
                               int inde = lan.indexOf(data);
                               currentLan = data;
-                              switch(inde){
+                              switch (inde) {
                                 case 0:
-                                  Get.updateLocale(Locale('en','US'));
+                                  Get.updateLocale(Locale('en', 'US'));
                                   break;
                                 case 1:
-                                  Get.updateLocale(Locale('zh','CN'));
+                                  Get.updateLocale(Locale('zh', 'CN'));
                                   break;
                               }
                               // currentWalletIndex = walletIndex[inde];
@@ -234,7 +246,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           const SizedBox(
                             width: 4,
                           ),
-                           Text(
+                          Text(
                             currentLan,
                             style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16, color: Color(0xff6B7280)),
                           ),
@@ -259,7 +271,7 @@ class _MyHomePageState extends State<MyHomePage> {
               SizedBox(
                 height: 40,
               ),
-               Text(
+              Text(
                 'DerivationInputs'.tr,
                 style: TextStyle(fontSize: 30, fontWeight: FontWeight.w400, color: Colors.black),
               ),
@@ -383,6 +395,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         callback: (List<SponsorBean> data) {
                           ///当前选中的所有链
                           chain = '';
+                          chainId = '';
                           if (data.isNotEmpty) {
                             for (var i in data) {
                               chain = chain + i.userName + ',';
@@ -425,8 +438,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 borderRadius: BorderRadius.circular(5),
                                 color: Color(0xffF8FAFC),
                               ),
-                              child:
-                              Container(
+                              child: Container(
                                 height: 142,
                                 width: 310,
                                 decoration: BoxDecoration(
@@ -465,31 +477,31 @@ class _MyHomePageState extends State<MyHomePage> {
                               ),
                             )
                           : Container(
-                        height: 142,
-                        width: 310,
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                              width: 1,
-                              color: Color(0xffE5E7Eb),
-                            ),
-                            borderRadius: BorderRadius.circular(5),
-                            color: Colors.white),
-                        child: Center(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                'FileUploaded'.tr,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                  color: Color(0xff1F2937),
+                              height: 142,
+                              width: 310,
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                    width: 1,
+                                    color: Color(0xffE5E7Eb),
+                                  ),
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: Colors.white),
+                              child: Center(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      'FileUploaded'.tr,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                        color: Color(0xff1F2937),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                      ),
+                            ),
                       onDragDone: (detail) async {
                         setState(() {
                           _list.addAll(detail.files);
@@ -1128,9 +1140,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   Container(
                     width: 162,
                   ),
-                  Flexible(child: CommonButtonWidget(callback: () {
+                  Flexible(child: CommonButtonWidget(callback: () async {
                     ///先check 参数是不是空的
-                    if (metaController.text.isEmpty || _list.isEmpty || chainId.isEmpty || eciesController.text.isEmpty || ricController.text.isEmpty ||
+                    if (metaController.text.isEmpty ||
+                        _list.isEmpty ||
+                        chainId.isEmpty ||
+                        eciesController.text.isEmpty ||
+                        ricController.text.isEmpty ||
                         controller1.text.isEmpty ||
                         controller2.text.isEmpty ||
                         controller3.text.isEmpty ||
@@ -1158,10 +1174,53 @@ class _MyHomePageState extends State<MyHomePage> {
                       debugPrint('当前的参数不能为空');
                       EasyLoading.showToast('CompleteParameters'.tr);
                     } else {
-                      helpWord = controller1.text+" "+controller2.text+" "+controller3.text+" "+controller4.text+" "+controller5.text+" "+controller6.text+" "+controller7.text+" "
-                          +controller8.text+" "+controller9.text+" "+controller10.text+" "+controller11.text+" "+controller12.text+" "+controller13.text+" "+controller14.text+" "
-                          +controller15.text+" "+controller16.text+" "+controller17.text+" "+controller18.text+" "+controller19.text+" "+controller20.text+" "+controller21.text+" "
-                          +controller22.text+" "+controller23.text+" "+controller24.text;
+                      helpWord = controller1.text +
+                          " " +
+                          controller2.text +
+                          " " +
+                          controller3.text +
+                          " " +
+                          controller4.text +
+                          " " +
+                          controller5.text +
+                          " " +
+                          controller6.text +
+                          " " +
+                          controller7.text +
+                          " " +
+                          controller8.text +
+                          " " +
+                          controller9.text +
+                          " " +
+                          controller10.text +
+                          " " +
+                          controller11.text +
+                          " " +
+                          controller12.text +
+                          " " +
+                          controller13.text +
+                          " " +
+                          controller14.text +
+                          " " +
+                          controller15.text +
+                          " " +
+                          controller16.text +
+                          " " +
+                          controller17.text +
+                          " " +
+                          controller18.text +
+                          " " +
+                          controller19.text +
+                          " " +
+                          controller20.text +
+                          " " +
+                          controller21.text +
+                          " " +
+                          controller22.text +
+                          " " +
+                          controller23.text +
+                          " " +
+                          controller24.text;
                       // debugPrint('当前的第一个参数：${metaController.text.toString()}');
                       debugPrint('当前的第2个参数：${chainId}');
                       debugPrint('当前的第3个参数：${_list[0].path}');
@@ -1176,22 +1235,28 @@ class _MyHomePageState extends State<MyHomePage> {
                       String temp = rsa.replaceAll(rsaStart, '').replaceAll(rsaEnd, '');
                       String fStr = rsaAdd + temp;
                       String fstr2 = fStr + rsaAddEnd;
-                      try{
-                        final res = NativeLib.printHelloWrapper(_list[0].path, helpWord, eciesController.text.toString(), fstr2, metaController.text.toString(), chainId);
-                        EasyLoading.showToast(res.data.toDartString(),duration: const Duration(seconds: 5));
-                        debugPrint('是否ok：${res.ok}');
-                        if (res.ok == 1) {
-                          EasyLoading.showToast('RestoredSuccess'.tr);
-                          debugPrint('${res.data.toDartString()}');
-                          List resJson = json.decode(res.data.toDartString());
-                          List<ItemBean> items = resJson.map((e) => ItemBean.fromJson(e)).toList();
-                          resultList.addAll(items);
-                          setState(() {});
-                          // final map = jsonDecode(res.data.toDartString());
-                        }else{
-                          EasyLoading.showToast(res.errMsg.toDartString());
+                      try {
+                        final res = await NativeLib().printHelloWrapper(_list[0].path, helpWord, eciesController.text.toString(), fstr2, metaController.text.toString(), chainId);
+                        if (res != null) {
+                          EasyLoading.showToast(res.data.toDartString(), duration: const Duration(seconds: 5));
+                          debugPrint('是否ok：${res.ok}');
+                          debugPrint('是否ok：${res.data.toDartString()}');
+                          if (res.ok == 1) {
+                            EasyLoading.showToast('RestoredSuccess'.tr);
+                            debugPrint('${res.data.toDartString()}');
+                            List resJson = json.decode(res.data.toDartString());
+                            List<ItemBean> items = resJson.map((e) => ItemBean.fromJson(e)).toList();
+                            resultList.clear();
+                            resultList.addAll(items);
+                            setState(() {});
+                            // final map = jsonDecode(res.data.toDartString());
+                          } else {
+                            EasyLoading.showToast(res.errMsg.toDartString());
+                          }
+                        } else {
+                          EasyLoading.showToast('RestoredFailed'.tr);
                         }
-                      }catch(e){
+                      } catch (e) {
                         EasyLoading.showToast("erro:$e");
                       }
                     }
@@ -1202,11 +1267,13 @@ class _MyHomePageState extends State<MyHomePage> {
               ListView.builder(
                   itemCount: resultList.length,
                   shrinkWrap: true,
-                  physics:ClampingScrollPhysics(),
+                  physics: ClampingScrollPhysics(),
                   itemBuilder: (c, i) => privateKeyWidget(
                         bean: resultList[i],
                       )),
-              SizedBox(height: 50,)
+              SizedBox(
+                height: 50,
+              )
             ],
           ),
         ),

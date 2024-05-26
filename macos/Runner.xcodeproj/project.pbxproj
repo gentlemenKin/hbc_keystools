@@ -29,6 +29,9 @@
 		33CC11132044BFA00003C045 /* MainFlutterWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33CC11122044BFA00003C045 /* MainFlutterWindow.swift */; };
 		3A8359FB2B5F3AEAF9DF446D /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB9812025954CD84B2A20BBE /* Pods_RunnerTests.framework */; };
 		D6C4DF868DDB17A289F3DB24 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A059C6E7420091E2C704A271 /* Pods_Runner.framework */; };
+		E219A6B42C02D4AF00CEBD2D /* lib_recovery_tool_arm64.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E219A6B32C02D4AF00CEBD2D /* lib_recovery_tool_arm64.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
+		E219A6B52C02D4C100CEBD2D /* lib_recovery_tool_arm64.dylib in Bundle Framework */ = {isa = PBXBuildFile; fileRef = E219A6B32C02D4AF00CEBD2D /* lib_recovery_tool_arm64.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		E219A6B62C02D51E00CEBD2D /* lib_recovery_tool_arm64.dylib in Resources */ = {isa = PBXBuildFile; fileRef = E219A6B32C02D4AF00CEBD2D /* lib_recovery_tool_arm64.dylib */; };
 		E25D87642C017F1C00C419C3 /* lib_recovery_tool.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E25D87632C017F1C00C419C3 /* lib_recovery_tool.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
 		E25D87652C017F2A00C419C3 /* lib_recovery_tool.dylib in Bundle Framework */ = {isa = PBXBuildFile; fileRef = E25D87632C017F1C00C419C3 /* lib_recovery_tool.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		E25D87662C017F5500C419C3 /* lib_recovery_tool.dylib in Resources */ = {isa = PBXBuildFile; fileRef = E25D87632C017F1C00C419C3 /* lib_recovery_tool.dylib */; };
@@ -58,6 +61,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				E219A6B52C02D4C100CEBD2D /* lib_recovery_tool_arm64.dylib in Bundle Framework */,
 				E25D87652C017F2A00C419C3 /* lib_recovery_tool.dylib in Bundle Framework */,
 			);
 			name = "Bundle Framework";
@@ -91,6 +95,7 @@
 		A059C6E7420091E2C704A271 /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C588331B65CCC4ED14BD5DE0 /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
 		CB9812025954CD84B2A20BBE /* Pods_RunnerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RunnerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E219A6B32C02D4AF00CEBD2D /* lib_recovery_tool_arm64.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = lib_recovery_tool_arm64.dylib; sourceTree = "<group>"; };
 		E25D87632C017F1C00C419C3 /* lib_recovery_tool.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = lib_recovery_tool.dylib; sourceTree = "<group>"; };
 		F0E25840B5EEE0D4B836BCEA /* Pods-RunnerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.debug.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -110,6 +115,7 @@
 			files = (
 				D6C4DF868DDB17A289F3DB24 /* Pods_Runner.framework in Frameworks */,
 				E25D87642C017F1C00C419C3 /* lib_recovery_tool.dylib in Frameworks */,
+				E219A6B42C02D4AF00CEBD2D /* lib_recovery_tool_arm64.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -207,6 +213,7 @@
 		D73912EC22F37F3D000D13A0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E219A6B32C02D4AF00CEBD2D /* lib_recovery_tool_arm64.dylib */,
 				E25D87632C017F1C00C419C3 /* lib_recovery_tool.dylib */,
 				A059C6E7420091E2C704A271 /* Pods_Runner.framework */,
 				CB9812025954CD84B2A20BBE /* Pods_RunnerTests.framework */,
@@ -321,6 +328,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E219A6B62C02D51E00CEBD2D /* lib_recovery_tool_arm64.dylib in Resources */,
 				33CC10F32044A3C60003C045 /* Assets.xcassets in Resources */,
 				33CC10F62044A3C60003C045 /* MainMenu.xib in Resources */,
 				E25D87662C017F5500C419C3 /* lib_recovery_tool.dylib in Resources */,

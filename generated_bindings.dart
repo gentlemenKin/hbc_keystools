@@ -60,13 +60,23 @@ class NativeLibrary {
   late final _GetRSResult =
       _GetRSResultPtr.asFunction<RSResult Function(GoString)>();
 
+  ffi.Pointer<ffi.Char> GetChainList() {
+    return _GetChainList();
+  }
+
+  late final _GetChainListPtr =
+      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Char> Function()>>(
+          'GetChainList');
+  late final _GetChainList =
+      _GetChainListPtr.asFunction<ffi.Pointer<ffi.Char> Function()>();
+
   RSResult GoRecovery(
     GoString zipPath,
     GoString userMnemonic,
     GoString eciesPrivKey,
     GoString rsaPrivKey,
     GoString vaultCount,
-    GoString coinTypes,
+    GoString chains,
   ) {
     return _GoRecovery(
       zipPath,
@@ -74,7 +84,7 @@ class NativeLibrary {
       eciesPrivKey,
       rsaPrivKey,
       vaultCount,
-      coinTypes,
+      chains,
     );
   }
 
