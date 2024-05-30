@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class CommonButtonWidget extends StatelessWidget {
-  const CommonButtonWidget({Key? key, required this.callback}) : super(key: key);
+  const CommonButtonWidget({Key? key, required this.callback,required this.string}) : super(key: key);
   final GestureTapCallback callback;
-
+  final String string;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -17,7 +17,7 @@ class CommonButtonWidget extends StatelessWidget {
         ),
         child: Center(
           child: Text(
-            'Generate'.tr,
+            string,
             style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16, color: Colors.white),
           ),
         ),

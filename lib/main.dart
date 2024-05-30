@@ -180,7 +180,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     NativeLib().getChainList().then((value) {
       if (value != null) {
@@ -196,6 +195,9 @@ class _MyHomePageState extends State<MyHomePage> {
       if (metaController.text.isNotEmpty) {
         showError1 = false;
         setState(() {});
+        if (metaController.text.length > 4) {
+          metaController.text = metaController.text.toString().substring(0, 4);
+        }
       }
     });
     eciesController.addListener(() {
@@ -1435,53 +1437,15 @@ class _MyHomePageState extends State<MyHomePage> {
                         //   //stopwatch.reset();
                         //
                         // })),
-                        Flexible(child: CommonButtonWidget(callback: () async {
-                      ///先check 参数是不是空的
-                      if (metaController.text.isEmpty ||
-                          _list.isEmpty ||
-                          chainId.isEmpty ||
-                          eciesController.text.isEmpty ||
-                          _rsaList.isEmpty ||
-                          controller1.text.isEmpty ||
-                          controller2.text.isEmpty ||
-                          controller3.text.isEmpty ||
-                          controller4.text.isEmpty ||
-                          controller5.text.isEmpty ||
-                          controller6.text.isEmpty ||
-                          controller7.text.isEmpty ||
-                          controller8.text.isEmpty ||
-                          controller9.text.isEmpty ||
-                          controller10.text.isEmpty ||
-                          controller11.text.isEmpty ||
-                          controller12.text.isEmpty ||
-                          controller13.text.isEmpty ||
-                          controller14.text.isEmpty ||
-                          controller15.text.isEmpty ||
-                          controller16.text.isEmpty ||
-                          controller17.text.isEmpty ||
-                          controller18.text.isEmpty ||
-                          controller19.text.isEmpty ||
-                          controller20.text.isEmpty ||
-                          controller21.text.isEmpty ||
-                          controller22.text.isEmpty ||
-                          controller23.text.isEmpty ||
-                          controller24.text.isEmpty) {
-                        if (metaController.text.isEmpty) {
-                          showError1 = true;
-                        }
-                        if (_list.isEmpty) {
-                          showError3 = true;
-                        }
-                        if (chainId.isEmpty) {
-                          showError2 = true;
-                        }
-                        if (eciesController.text.isEmpty) {
-                          showError5 = true;
-                        }
-                        if (_rsaList.isEmpty) {
-                          showError6 = true;
-                        }
-                        if (controller1.text.isEmpty ||
+                        CommonButtonWidget(
+                      callback: () async {
+                        ///先check 参数是不是空的
+                        if (metaController.text.isEmpty ||
+                            _list.isEmpty ||
+                            chainId.isEmpty ||
+                            eciesController.text.isEmpty ||
+                            _rsaList.isEmpty ||
+                            controller1.text.isEmpty ||
                             controller2.text.isEmpty ||
                             controller3.text.isEmpty ||
                             controller4.text.isEmpty ||
@@ -1505,104 +1469,146 @@ class _MyHomePageState extends State<MyHomePage> {
                             controller22.text.isEmpty ||
                             controller23.text.isEmpty ||
                             controller24.text.isEmpty) {
-                          showError4 = true;
-                        }
-                        setState(() {});
-                      } else {
-                        showError1 = true;
-                        showError2 = true;
-                        showError3 = true;
-                        showError4 = true;
-                        showError5 = true;
-                        showError6 = true;
-                        setState(() {});
-                        helpWord = controller1.text.trim() +
-                            " " +
-                            controller2.text.trim() +
-                            " " +
-                            controller3.text.trim() +
-                            " " +
-                            controller4.text.trim() +
-                            " " +
-                            controller5.text.trim() +
-                            " " +
-                            controller6.text.trim() +
-                            " " +
-                            controller7.text.trim() +
-                            " " +
-                            controller8.text.trim() +
-                            " " +
-                            controller9.text.trim() +
-                            " " +
-                            controller10.text.trim() +
-                            " " +
-                            controller11.text.trim() +
-                            " " +
-                            controller12.text.trim() +
-                            " " +
-                            controller13.text.trim() +
-                            " " +
-                            controller14.text.trim() +
-                            " " +
-                            controller15.text.trim() +
-                            " " +
-                            controller16.text.trim() +
-                            " " +
-                            controller17.text.trim() +
-                            " " +
-                            controller18.text.trim() +
-                            " " +
-                            controller19.text.trim() +
-                            " " +
-                            controller20.text.trim() +
-                            " " +
-                            controller21.text.trim() +
-                            " " +
-                            controller22.text.trim() +
-                            " " +
-                            controller23.text.trim() +
-                            " " +
-                            controller24.text.trim();
-                        // debugPrint('当前的第一个参数：${metaController.text.toString()}');
-                        debugPrint('当前的第2个参数：${chainId}');
-                        debugPrint('当前的第3个参数：${_list[0].path}');
-                        debugPrint('当前的第4个参数：${helpWord}');
-                        debugPrint('当前的第5个参数：${eciesController.text.toString()}');
-                        debugPrint('当前的第6个参数：${_rsaList[0].path}');
-                        String rsaStart = '-----BEGIN PRIVATE KEY-----';
-                        String rsaEnd = '-----END PRIVATE KEY-----';
-                        String rsaAdd = '-----BEGIN PRIVATE KEY-----\n';
-                        String rsaAddEnd = '\n-----END PRIVATE KEY-----';
-                        String rsa = ricController.text.toString();
-                        String temp = rsa.replaceAll(rsaStart, '').replaceAll(rsaEnd, '');
-                        String fStr = rsaAdd + temp;
-                        String fstr2 = fStr + rsaAddEnd;
-                        try {
-                          final res = await NativeLib().printHelloWrapper(_list[0].path, helpWord, eciesController.text, _rsaList[0].path, metaController.text.toString(), chainId);
-                          if (res != null) {
-                            EasyLoading.showToast(res.data.toDartString(), duration: const Duration(seconds: 5));
-                            debugPrint('是否ok：${res.ok}');
-                            debugPrint('是否ok：${res.data.toDartString()}');
-                            if (res.ok == 1) {
-                              EasyLoading.showToast('RestoredSuccess'.tr);
-                              debugPrint('${res.data.toDartString()}');
-                              List resJson = json.decode(res.data.toDartString());
-                              List<ItemBean> items = resJson.map((e) => ItemBean.fromJson(e)).toList();
-                              resultList.clear();
-                              resultList.addAll(items);
-                              setState(() {});
-                              // final map = jsonDecode(res.data.toDartString());
-                            } else {
-                              EasyLoading.showToast(res.errMsg.toDartString());
-                            }
-                          } else {
-                            EasyLoading.showToast('RestoredFailed'.tr);
+                          if (metaController.text.isEmpty || int.tryParse(metaController.text.toString())! > 9999) {
+                            showError1 = true;
                           }
-                        } catch (e) {
-                          EasyLoading.showToast("erro:$e");
+                          if (_list.isEmpty) {
+                            showError3 = true;
+                          }
+                          if (chainId.isEmpty) {
+                            showError2 = true;
+                          }
+                          if (eciesController.text.isEmpty) {
+                            showError5 = true;
+                          }
+                          if (_rsaList.isEmpty) {
+                            showError6 = true;
+                          }
+                          if (controller1.text.isEmpty ||
+                              controller2.text.isEmpty ||
+                              controller3.text.isEmpty ||
+                              controller4.text.isEmpty ||
+                              controller5.text.isEmpty ||
+                              controller6.text.isEmpty ||
+                              controller7.text.isEmpty ||
+                              controller8.text.isEmpty ||
+                              controller9.text.isEmpty ||
+                              controller10.text.isEmpty ||
+                              controller11.text.isEmpty ||
+                              controller12.text.isEmpty ||
+                              controller13.text.isEmpty ||
+                              controller14.text.isEmpty ||
+                              controller15.text.isEmpty ||
+                              controller16.text.isEmpty ||
+                              controller17.text.isEmpty ||
+                              controller18.text.isEmpty ||
+                              controller19.text.isEmpty ||
+                              controller20.text.isEmpty ||
+                              controller21.text.isEmpty ||
+                              controller22.text.isEmpty ||
+                              controller23.text.isEmpty ||
+                              controller24.text.isEmpty) {
+                            showError4 = true;
+                          }
+                          setState(() {});
+                        } else {
+                          showError1 = false;
+                          showError2 = false;
+                          showError3 = false;
+                          showError4 = false;
+                          showError5 = false;
+                          showError6 = false;
+                          setState(() {});
+                          helpWord = controller1.text.trim() +
+                              " " +
+                              controller2.text.trim() +
+                              " " +
+                              controller3.text.trim() +
+                              " " +
+                              controller4.text.trim() +
+                              " " +
+                              controller5.text.trim() +
+                              " " +
+                              controller6.text.trim() +
+                              " " +
+                              controller7.text.trim() +
+                              " " +
+                              controller8.text.trim() +
+                              " " +
+                              controller9.text.trim() +
+                              " " +
+                              controller10.text.trim() +
+                              " " +
+                              controller11.text.trim() +
+                              " " +
+                              controller12.text.trim() +
+                              " " +
+                              controller13.text.trim() +
+                              " " +
+                              controller14.text.trim() +
+                              " " +
+                              controller15.text.trim() +
+                              " " +
+                              controller16.text.trim() +
+                              " " +
+                              controller17.text.trim() +
+                              " " +
+                              controller18.text.trim() +
+                              " " +
+                              controller19.text.trim() +
+                              " " +
+                              controller20.text.trim() +
+                              " " +
+                              controller21.text.trim() +
+                              " " +
+                              controller22.text.trim() +
+                              " " +
+                              controller23.text.trim() +
+                              " " +
+                              controller24.text.trim();
+                          // debugPrint('当前的第一个参数：${metaController.text.toString()}');
+                          debugPrint('当前的第2个参数：${chainId}');
+                          debugPrint('当前的第3个参数：${_list[0].path}');
+                          debugPrint('当前的第4个参数：${helpWord}');
+                          debugPrint('当前的第5个参数：${eciesController.text.toString()}');
+                          debugPrint('当前的第6个参数：${_rsaList[0].path}');
+                          String rsaStart = '-----BEGIN PRIVATE KEY-----';
+                          String rsaEnd = '-----END PRIVATE KEY-----';
+                          String rsaAdd = '-----BEGIN PRIVATE KEY-----\n';
+                          String rsaAddEnd = '\n-----END PRIVATE KEY-----';
+                          String rsa = ricController.text.toString();
+                          String temp = rsa.replaceAll(rsaStart, '').replaceAll(rsaEnd, '');
+                          String fStr = rsaAdd + temp;
+                          String fstr2 = fStr + rsaAddEnd;
+                          try {
+                            final res =
+                                await NativeLib().printHelloWrapper(_list[0].path, helpWord, eciesController.text, _rsaList[0].path, metaController.text.toString(), chainId);
+                            if (res != null) {
+                              EasyLoading.showToast(res.data.toDartString(), duration: const Duration(seconds: 5));
+                              debugPrint('是否ok：${res.ok}');
+                              debugPrint('是否ok：${res.data.toDartString()}');
+                              if (res.ok == 1) {
+                                EasyLoading.showToast('RestoredSuccess'.tr);
+                                debugPrint('${res.data.toDartString()}');
+                                List resJson = json.decode(res.data.toDartString());
+                                List<ItemBean> items = resJson.map((e) => ItemBean.fromJson(e)).toList();
+                                resultList.clear();
+                                resultList.addAll(items);
+                                setState(() {});
+                                // final map = jsonDecode(res.data.toDartString());
+                              } else {
+                                EasyLoading.showToast(res.errMsg.toDartString());
+                              }
+                            } else {
+                              EasyLoading.showToast('RestoredFailed'.tr);
+                            }
+                          } catch (e) {
+                            EasyLoading.showToast("erro:$e");
+                          }
                         }
-                      }
-                    })),
+                      },
+                      string: 'Generate'.tr,
+                    ),
                   )
                 ],
               ),
@@ -1630,56 +1636,60 @@ class _MyHomePageState extends State<MyHomePage> {
                     Container(
                       width: 162,
                     ),
-                    Flexible(child: CommonButtonWidget(callback: () async {
-                      if (resultList.isEmpty) {
-                        EasyLoading.showToast('当前无可导出文件');
-                      } else {
-                        var excel = Excel.createExcel();
-                        var sheet = excel['Sheet1'];
-                        sheet.appendRow([
-                          TextCellValue('Chain Name'),
-                          TextCellValue('Address'),
-                          TextCellValue('Child Extended Private Key'),
-                        ]);
-
-                        if (resultList.isNotEmpty) {
-                          resultList.forEach((element) {
-                            sheet.appendRow([
-                              TextCellValue(element.CoinType),
-                              TextCellValue(element.Address),
-                              TextCellValue(element.PrivKey),
-                            ]);
-                          });
+                    Flexible(
+                        child: CommonButtonWidget(
+                      callback: () async {
+                        if (resultList.isEmpty) {
+                          EasyLoading.showToast('当前无可导出文件');
                         } else {
+                          var excel = Excel.createExcel();
+                          var sheet = excel['Sheet1'];
                           sheet.appendRow([
-                            TextCellValue('element.CoinType'),
-                            TextCellValue('element.Address'),
-                            TextCellValue('element.PrivKey'),
+                            TextCellValue('Chain Name'),
+                            TextCellValue('Address'),
+                            TextCellValue('Child Extended Private Key'),
                           ]);
-                        }
 
-                        // Saving the file
-                        String? outputFile1 = await FilePicker.platform.saveFile(
-                          dialogTitle: 'Please select an output file:',
-                          fileName: 'PrivateKeyFile.xlsx',
-                        );
+                          if (resultList.isNotEmpty) {
+                            resultList.forEach((element) {
+                              sheet.appendRow([
+                                TextCellValue(element.CoinType),
+                                TextCellValue(element.Address),
+                                TextCellValue(element.PrivKey),
+                              ]);
+                            });
+                          } else {
+                            sheet.appendRow([
+                              TextCellValue('element.CoinType'),
+                              TextCellValue('element.Address'),
+                              TextCellValue('element.PrivKey'),
+                            ]);
+                          }
 
-                        if (outputFile1 == null) {
-                          debugPrint('当前的outputFile----$outputFile1');
-                          // User canceled the picker
-                        } else {
-                          debugPrint('当前的outputFile----$outputFile1');
-                          List<int>? fileBytes = excel.save();
-                          //print('saving executed in ${stopwatch.elapsed}');
-                          if (fileBytes != null) {
-                            File(path.join(outputFile1))
-                              ..createSync(recursive: true)
-                              ..writeAsBytesSync(fileBytes);
+                          // Saving the file
+                          String? outputFile1 = await FilePicker.platform.saveFile(
+                            dialogTitle: 'Please select an output file:',
+                            fileName: 'PrivateKeyFile.xlsx',
+                          );
+
+                          if (outputFile1 == null) {
+                            debugPrint('当前的outputFile----$outputFile1');
+                            // User canceled the picker
+                          } else {
+                            debugPrint('当前的outputFile----$outputFile1');
+                            List<int>? fileBytes = excel.save();
+                            //print('saving executed in ${stopwatch.elapsed}');
+                            if (fileBytes != null) {
+                              File(path.join(outputFile1))
+                                ..createSync(recursive: true)
+                                ..writeAsBytesSync(fileBytes);
+                            }
                           }
                         }
-                      }
-                      //stopwatch.reset();
-                    })),
+                        //stopwatch.reset();
+                      },
+                      string: 'Export'.tr,
+                    )),
                   ],
                 ),
             ],

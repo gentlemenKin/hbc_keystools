@@ -4,7 +4,7 @@ const Map<String ,String> zh_CN = {
 
   "Cancel":'取消',
   "DerivationInputs":"推导输入",
-  "VaultIndex":'金库类型',
+  "VaultIndex":'钱包数量',
   "Input":'请输入',
   "Chain":'链',
   "ImportFile":'导入文件',
