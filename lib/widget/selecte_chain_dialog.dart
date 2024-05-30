@@ -28,8 +28,8 @@ class _SelectChainDialogState extends State<SelectChainDialog> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 370,
-      width: 288,
+      height: 250,
+      width: 120,
       padding: const EdgeInsets.only(top: 8),
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.white),
       child: Column(

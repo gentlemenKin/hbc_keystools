@@ -74,7 +74,7 @@ class NativeLibrary {
     GoString zipPath,
     GoString userMnemonic,
     GoString eciesPrivKey,
-    GoString rsaPrivKey,
+    GoString rsaPrivKeyPath,
     GoString vaultCount,
     GoString chains,
   ) {
@@ -82,7 +82,7 @@ class NativeLibrary {
       zipPath,
       userMnemonic,
       eciesPrivKey,
-      rsaPrivKey,
+      rsaPrivKeyPath,
       vaultCount,
       chains,
     );

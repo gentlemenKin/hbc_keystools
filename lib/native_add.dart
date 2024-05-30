@@ -93,12 +93,14 @@ class NativeLib {
         return null;
       }
     } else {
+
       return ffi.DynamicLibrary.open('recovery_tool.dll');
     }
   }
 
   Future<GetRecoveryDart?> getFun() async {
     final _dylib = await getLib();
+
     debugPrint('当前的cpu ----${_dylib.toString()}');
     if (_dylib != null) {
       return _dylib.lookupFunction<GetRecoveryC, GetRecoveryDart>('GoRecovery');

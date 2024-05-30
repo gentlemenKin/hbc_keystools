@@ -2,8 +2,12 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:desktop_drop/desktop_drop.dart';
+import 'package:excel/excel.dart';
 import 'package:ffi/ffi.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:hbc_keystools/native_add.dart';
@@ -13,6 +17,7 @@ import 'package:hbc_keystools/widget/common_btn.dart';
 import 'package:hbc_keystools/widget/dialog_widget.dart';
 import 'package:hbc_keystools/widget/input_row_select_widget.dart';
 import 'package:hbc_keystools/widget/input_row_widget.dart';
+import 'package:hbc_keystools/widget/poup_window.dart';
 import 'package:hbc_keystools/widget/private_key_widget.dart';
 import 'package:hbc_keystools/widget/select_coin_dialog.dart';
 import 'package:hbc_keystools/widget/selecte_chain_dialog.dart';
@@ -23,6 +28,8 @@ import 'package:cross_file/cross_file.dart';
 import 'chain_result_bean.dart';
 import 'local/constant.dart';
 import 'package:path/path.dart' as path;
+import 'package:excel/excel.dart' as excel;
+import 'package:flutter/src/painting/box_border.dart' as Border;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -152,6 +159,14 @@ class _MyHomePageState extends State<MyHomePage> {
   String chain = '';
   String chainId = '';
   String helpWord = '';
+  final List<XFile> _rsaList = [];
+  bool showError1 = false;
+  bool showError2 = false;
+  bool showError3 = false;
+  bool showError4 = false;
+  bool showError5 = false;
+  bool showError6 = false;
+  GlobalKey userPopKey = GlobalKey();
 
   void clickBtn(String zipPath, String userMnemonic, String eciesPrivKey, String rsaPrivKey, String vaultCount, String coinTypes) {
     if (Platform.isMacOS) {
@@ -162,19 +177,32 @@ class _MyHomePageState extends State<MyHomePage> {
       // sum(zipPath, userMnemonic, eciesPrivKey, rsaPrivKey, vaultCount, coinTypes);
     }
   }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    NativeLib().getChainList().then((value){
-      if(value!=null){
+    NativeLib().getChainList().then((value) {
+      if (value != null) {
+        debugPrint('当前的数据：${value.p.toDartString()}');
         List resJson = json.decode(value.p.toDartString());
         List<ChainItemBean> items = resJson.map((e) => ChainItemBean.fromJson(e)).toList();
         items.forEach((element) {
           coins.add(SponsorBean(false, element.name, element.valName));
         });
       }
-
+    });
+    metaController.addListener(() {
+      if (metaController.text.isNotEmpty) {
+        showError1 = false;
+        setState(() {});
+      }
+    });
+    eciesController.addListener(() {
+      if (metaController.text.isNotEmpty) {
+        showError5 = false;
+        setState(() {});
+      }
     });
   }
 
@@ -205,37 +233,153 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Get.dialog(DialogWidget(
-                          padding: EdgeInsets.zero,
-                          width: 600,
-                          height: 400,
-                          child: SelectChainDialog(
-                            chains: lan,
-                            callback: (String data) {
-                              int inde = lan.indexOf(data);
-                              currentLan = data;
-                              switch (inde) {
-                                case 0:
-                                  Get.updateLocale(Locale('en', 'US'));
-                                  break;
-                                case 1:
-                                  Get.updateLocale(Locale('zh', 'CN'));
-                                  break;
-                              }
-                              // currentWalletIndex = walletIndex[inde];
-                              // walletTypeName = data;
-                              // setState(() {});
-                              // debugPrint('当前的钱包index = $currentWalletIndex');
-                            },
-                          )));
+                      PopupWindow.create(
+                          userPopKey,
+                          Container(
+                            height: 140,
+                            width: 250,
+                            padding: EdgeInsets.all(12),
+                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: Colors.white),
+                            child: Column(
+                              children: [
+                                GestureDetector(
+                                  child: Container(
+                                    padding: EdgeInsets.all(12),
+                                    decoration: currentLan == 'zh'
+                                        ? BoxDecoration(borderRadius: BorderRadius.circular(10), color: Color(0xffF3F4F6))
+                                        : BoxDecoration(
+                                            color: Colors.transparent,
+                                          ),
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          '简体中文',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 18,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                        if (currentLan == 'zh')
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(10),
+                                              ),
+                                              color: Color(0xff9700E9),
+                                            ),
+                                            width: 10,
+                                            height: 10,
+                                          )
+                                      ],
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    currentLan = 'zh';
+                                    Get.updateLocale(Locale('zh', 'CN'));
+                                    PopupWindow.hint();
+                                  },
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                GestureDetector(
+                                  child: Container(
+                                    decoration: currentLan == 'en'
+                                        ? BoxDecoration(borderRadius: BorderRadius.circular(10), color: Color(0xffF3F4F6))
+                                        : BoxDecoration(
+                                            color: Colors.transparent,
+                                          ),
+                                    padding: EdgeInsets.all(12),
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          'English',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 18,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                        if (currentLan == 'en')
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                                              color: Color(0xff9700E9),
+                                            ),
+                                            width: 10,
+                                            height: 10,
+                                          )
+                                      ],
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    currentLan = 'en';
+                                    Get.updateLocale(Locale('en', 'US'));
+                                    PopupWindow.hint();
+                                  },
+                                )
+                              ],
+                            ),
+                          )
+
+                          //     SelectChainDialog(
+                          //   chains: lan,
+                          //   callback: (String data) {
+                          //     int inde = lan.indexOf(data);
+                          //     currentLan = data;
+                          //     switch (inde) {
+                          //       case 0:
+                          //         Get.updateLocale(Locale('en', 'US'));
+                          //         break;
+                          //       case 1:
+                          //         Get.updateLocale(Locale('zh', 'CN'));
+                          //         break;
+                          //     }
+                          //     // currentWalletIndex = walletIndex[inde];
+                          //     // walletTypeName = data;
+                          //     // setState(() {});
+                          //     // debugPrint('当前的钱包index = $currentWalletIndex');
+                          //   },
+                          // )
+                          );
+                      // Get.dialog(DialogWidget(
+                      //     padding: EdgeInsets.zero,
+                      //     width: 600,
+                      //     height: 400,
+                      //     child:
+                      //     SelectChainDialog(
+                      //       chains: lan,
+                      //       callback: (String data) {
+                      //         int inde = lan.indexOf(data);
+                      //         currentLan = data;
+                      //         switch (inde) {
+                      //           case 0:
+                      //             Get.updateLocale(Locale('en', 'US'));
+                      //             break;
+                      //           case 1:
+                      //             Get.updateLocale(Locale('zh', 'CN'));
+                      //             break;
+                      //         }
+                      //         // currentWalletIndex = walletIndex[inde];
+                      //         // walletTypeName = data;
+                      //         // setState(() {});
+                      //         // debugPrint('当前的钱包index = $currentWalletIndex');
+                      //       },
+                      //     )
+                      // )
+                      // );
                     },
                     child: Container(
+                      key: userPopKey,
                       padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(
                             Radius.circular(30),
                           ),
-                          border: Border.all(width: 1, color: Color(0xffEAEAEA))),
+                          border: Border.Border.all(width: 1, color: Color(0xffEAEAEA))),
                       child: Row(
                         children: [
                           Image.asset(
@@ -278,110 +422,21 @@ class _MyHomePageState extends State<MyHomePage> {
               SizedBox(
                 height: 30,
               ),
-              // Row(
-              //   children: [
-              //     Container(
-              //       width: 150,
-              //       child: Text(
-              //         'Within Input',
-              //         style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Colors.black),
-              //       ),
-              //     ),
-              //     SizedBox(
-              //       width: 12,
-              //     ),
-              //     Container(
-              //       width: 355,
-              //       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-              //       decoration: BoxDecoration(
-              //         border: Border.all(width: 1, color: Color(0xffE5E7Eb)),
-              //         borderRadius: BorderRadius.circular(10),
-              //       ),
-              //       child: GestureDetector(
-              //         onTap: () {
-              //           manualInput = true;
-              //           setState(() {});
-              //         },
-              //         child: Row(
-              //           children: [
-              //             ChooseRadioBtn(
-              //               choose: manualInput,
-              //             ),
-              //             SizedBox(
-              //               width: 16,
-              //             ),
-              //             Text(
-              //               'Manual Input',
-              //               style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16, color: Colors.black),
-              //             )
-              //           ],
-              //         ),
-              //       ),
-              //     ),
-              //     SizedBox(
-              //       width: 10,
-              //     ),
-              //     Container(
-              //       width: 355,
-              //       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-              //       decoration: BoxDecoration(
-              //         border: Border.all(width: 1, color: Color(0xffE5E7Eb)),
-              //         borderRadius: BorderRadius.circular(10),
-              //       ),
-              //       child: GestureDetector(
-              //         onTap: () {
-              //           manualInput = false;
-              //           setState(() {});
-              //         },
-              //         child: Row(
-              //           children: [
-              //             ChooseRadioBtn(
-              //               choose: !manualInput,
-              //             ),
-              //             SizedBox(
-              //               width: 16,
-              //             ),
-              //             Text(
-              //               'File Import',
-              //               style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16, color: Colors.black),
-              //             )
-              //           ],
-              //         ),
-              //       ),
-              //     ),
-              //   ],
-              // ),
-              // SizedBox(
-              //   height: 30,
-              // ),
-              InputRowWidget(title: 'VaultIndex'.tr, controller: metaController, hint: 'Input'.tr),
+              InputRowWidget(
+                title: 'VaultIndex'.tr,
+                controller: metaController,
+                hint: 'input1'.tr,
+                showParse: false,
+                formatter: FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                showError: showError1,
+                errorMsg: 'EnterAmount'.tr,
+              ),
               SizedBox(
                 height: 30,
               ),
-              // InputRowSelectWidget(
-              //   title: 'Wallet Type',
-              //   hint: walletTypeName,
-              //   callback: () {
-              //     Get.dialog(DialogWidget(
-              //         padding: EdgeInsets.zero,
-              //         width: 600,
-              //         height: 400,
-              //         child: SelectChainDialog(
-              //           chains: walletName,
-              //           callback: (String data) {
-              //             int inde = walletName.indexOf(data);
-              //             currentWalletIndex = walletIndex[inde];
-              //             walletTypeName = data;
-              //             setState(() {});
-              //             debugPrint('当前的钱包index = $currentWalletIndex');
-              //           },
-              //         )));
-              //   },
-              // ),
               SizedBox(
                 height: 30,
               ),
-
               InputRowSelectWidget(
                 title: 'Chain'.tr,
                 hint: chooseChainName,
@@ -397,6 +452,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           chain = '';
                           chainId = '';
                           if (data.isNotEmpty) {
+                            showError2 = false;
                             for (var i in data) {
                               chain = chain + i.userName + ',';
                               chainId = chainId + i.id + ',';
@@ -411,6 +467,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         },
                       )));
                 },
+                showError: showError2,
+                errorMsg: 'EnterNet'.tr,
               ),
               SizedBox(
                 height: 30,
@@ -429,85 +487,128 @@ class _MyHomePageState extends State<MyHomePage> {
                     SizedBox(
                       width: 12,
                     ),
-                    DropTarget(
-                      child: _list.isEmpty
-                          ? Container(
-                              padding: EdgeInsets.all(20),
-                              decoration: BoxDecoration(
-                                border: Border.all(width: 1, color: Color(0xffE5E7Eb)),
-                                borderRadius: BorderRadius.circular(5),
-                                color: Color(0xffF8FAFC),
-                              ),
-                              child: Container(
-                                height: 142,
-                                width: 310,
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                      width: 1,
-                                      color: Color(0xffE5E7Eb),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        DropTarget(
+                          child: _list.isEmpty
+                              ? Container(
+                                  padding: EdgeInsets.symmetric(vertical: 48, horizontal: 130),
+                                  decoration: BoxDecoration(
+                                      border: Border.Border.all(
+                                        width: 1,
+                                        color: Color(0xffE5E7Eb),
+                                      ),
+                                      borderRadius: BorderRadius.circular(5),
+                                      color: Color(0xffF8F3FE)),
+                                  child: Center(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Image.asset(
+                                          AssetsConstant.fileUpload,
+                                          width: 44,
+                                          height: 44,
+                                        ),
+                                        SizedBox(
+                                          height: 8,
+                                        ),
+                                        Text(
+                                          'DropFile'.tr,
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
+                                            color: Color(0xff1F2937),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 8,
+                                        ),
+                                        Text(
+                                          'MaximumSize'.tr,
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                            color: Color(0xff9CA3AF),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: Colors.white),
-                                child: Center(
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(
-                                        'DropFile'.tr,
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500,
-                                          color: Color(0xff1F2937),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 8,
-                                      ),
-                                      Text(
-                                        'MaximumSize'.tr,
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500,
-                                          color: Color(0xff9CA3AF),
-                                        ),
-                                      ),
-                                    ],
                                   ),
-                                ),
-                              ),
-                            )
-                          : Container(
-                              height: 142,
-                              width: 310,
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                    width: 1,
-                                    color: Color(0xffE5E7Eb),
-                                  ),
-                                  borderRadius: BorderRadius.circular(5),
-                                  color: Colors.white),
-                              child: Center(
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
+                                )
+                              : Stack(
                                   children: [
-                                    Text(
-                                      'FileUploaded'.tr,
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
-                                        color: Color(0xff1F2937),
+                                    Container(
+                                      padding: EdgeInsets.symmetric(vertical: 48, horizontal: 130),
+                                      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                                      decoration: BoxDecoration(
+                                          border: Border.Border.all(
+                                            width: 1,
+                                            color: Color(0xffE5E7EB),
+                                          ),
+                                          borderRadius: BorderRadius.circular(5),
+                                          color: Color(0xffF8FAFC)),
+                                      child: Center(
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Image.asset(
+                                              AssetsConstant.fileUploaded,
+                                              width: 44,
+                                              height: 44,
+                                            ),
+                                            SizedBox(
+                                              height: 8,
+                                            ),
+                                            Text(
+                                              'FileUploaded'.tr,
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500,
+                                                color: Color(0xffD1D5D8),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
+                                    ),
+                                    Positioned(
+                                      right: 0,
+                                      top: 0,
+                                      child: GestureDetector(
+                                          onTap: () {
+                                            _list.clear();
+                                            setState(() {});
+                                          },
+                                          child: Image.asset(
+                                            AssetsConstant.delete,
+                                            width: 20,
+                                            height: 20,
+                                          )),
                                     ),
                                   ],
                                 ),
-                              ),
+                          onDragDone: (detail) async {
+                            setState(() {
+                              _list.addAll(detail.files);
+                              if (_list.isNotEmpty) {
+                                showError3 = false;
+                              }
+                              debugPrint('当前的路径：${_list[0].path}');
+                            });
+                          },
+                        ),
+                        if (showError3)
+                          Text(
+                            'PleaseImport'.tr,
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Color(0xffE32349),
+                              fontWeight: FontWeight.w500,
                             ),
-                      onDragDone: (detail) async {
-                        setState(() {
-                          _list.addAll(detail.files);
-                          debugPrint('当前的路径：${_list[0].path}');
-                        });
-                      },
+                          )
+                      ],
                     )
                   ],
                 ),
@@ -525,6 +626,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   Column(
                     mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
                         mainAxisSize: MainAxisSize.min,
@@ -534,7 +636,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             width: 140,
                             padding: EdgeInsets.symmetric(horizontal: 16),
                             decoration: BoxDecoration(
-                              border: Border.all(width: 1, color: Color(0xffE5E7Eb)),
+                              border: Border.Border.all(width: 1, color: Color(0xffE5E7Eb)),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: TextField(
@@ -558,7 +660,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             width: 140,
                             padding: EdgeInsets.symmetric(horizontal: 16),
                             decoration: BoxDecoration(
-                              border: Border.all(width: 1, color: Color(0xffE5E7Eb)),
+                              border: Border.Border.all(width: 1, color: Color(0xffE5E7Eb)),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: TextField(
@@ -582,7 +684,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             width: 140,
                             padding: EdgeInsets.symmetric(horizontal: 16),
                             decoration: BoxDecoration(
-                              border: Border.all(width: 1, color: Color(0xffE5E7Eb)),
+                              border: Border.Border.all(width: 1, color: Color(0xffE5E7Eb)),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: TextField(
@@ -606,7 +708,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             width: 140,
                             padding: EdgeInsets.symmetric(horizontal: 16),
                             decoration: BoxDecoration(
-                              border: Border.all(width: 1, color: Color(0xffE5E7Eb)),
+                              border: Border.Border.all(width: 1, color: Color(0xffE5E7Eb)),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: TextField(
@@ -630,7 +732,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             width: 140,
                             padding: EdgeInsets.symmetric(horizontal: 16),
                             decoration: BoxDecoration(
-                              border: Border.all(width: 1, color: Color(0xffE5E7Eb)),
+                              border: Border.Border.all(width: 1, color: Color(0xffE5E7Eb)),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: TextField(
@@ -654,7 +756,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             width: 140,
                             padding: EdgeInsets.symmetric(horizontal: 16),
                             decoration: BoxDecoration(
-                              border: Border.all(width: 1, color: Color(0xffE5E7Eb)),
+                              border: Border.Border.all(width: 1, color: Color(0xffE5E7Eb)),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: TextField(
@@ -683,7 +785,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             width: 140,
                             padding: EdgeInsets.symmetric(horizontal: 16),
                             decoration: BoxDecoration(
-                              border: Border.all(width: 1, color: Color(0xffE5E7Eb)),
+                              border: Border.Border.all(width: 1, color: Color(0xffE5E7Eb)),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: TextField(
@@ -707,7 +809,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             width: 140,
                             padding: EdgeInsets.symmetric(horizontal: 16),
                             decoration: BoxDecoration(
-                              border: Border.all(width: 1, color: Color(0xffE5E7Eb)),
+                              border: Border.Border.all(width: 1, color: Color(0xffE5E7Eb)),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: TextField(
@@ -731,7 +833,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             width: 140,
                             padding: EdgeInsets.symmetric(horizontal: 16),
                             decoration: BoxDecoration(
-                              border: Border.all(width: 1, color: Color(0xffE5E7Eb)),
+                              border: Border.Border.all(width: 1, color: Color(0xffE5E7Eb)),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: TextField(
@@ -755,7 +857,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             width: 140,
                             padding: EdgeInsets.symmetric(horizontal: 16),
                             decoration: BoxDecoration(
-                              border: Border.all(width: 1, color: Color(0xffE5E7Eb)),
+                              border: Border.Border.all(width: 1, color: Color(0xffE5E7Eb)),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: TextField(
@@ -779,7 +881,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             width: 140,
                             padding: EdgeInsets.symmetric(horizontal: 16),
                             decoration: BoxDecoration(
-                              border: Border.all(width: 1, color: Color(0xffE5E7Eb)),
+                              border: Border.Border.all(width: 1, color: Color(0xffE5E7Eb)),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: TextField(
@@ -803,7 +905,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             width: 140,
                             padding: EdgeInsets.symmetric(horizontal: 16),
                             decoration: BoxDecoration(
-                              border: Border.all(width: 1, color: Color(0xffE5E7Eb)),
+                              border: Border.Border.all(width: 1, color: Color(0xffE5E7Eb)),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: TextField(
@@ -832,7 +934,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             width: 140,
                             padding: EdgeInsets.symmetric(horizontal: 16),
                             decoration: BoxDecoration(
-                              border: Border.all(width: 1, color: Color(0xffE5E7Eb)),
+                              border: Border.Border.all(width: 1, color: Color(0xffE5E7Eb)),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: TextField(
@@ -856,7 +958,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             width: 140,
                             padding: EdgeInsets.symmetric(horizontal: 16),
                             decoration: BoxDecoration(
-                              border: Border.all(width: 1, color: Color(0xffE5E7Eb)),
+                              border: Border.Border.all(width: 1, color: Color(0xffE5E7Eb)),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: TextField(
@@ -880,7 +982,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             width: 140,
                             padding: EdgeInsets.symmetric(horizontal: 16),
                             decoration: BoxDecoration(
-                              border: Border.all(width: 1, color: Color(0xffE5E7Eb)),
+                              border: Border.Border.all(width: 1, color: Color(0xffE5E7Eb)),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: TextField(
@@ -904,7 +1006,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             width: 140,
                             padding: EdgeInsets.symmetric(horizontal: 16),
                             decoration: BoxDecoration(
-                              border: Border.all(width: 1, color: Color(0xffE5E7Eb)),
+                              border: Border.Border.all(width: 1, color: Color(0xffE5E7Eb)),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: TextField(
@@ -928,7 +1030,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             width: 140,
                             padding: EdgeInsets.symmetric(horizontal: 16),
                             decoration: BoxDecoration(
-                              border: Border.all(width: 1, color: Color(0xffE5E7Eb)),
+                              border: Border.Border.all(width: 1, color: Color(0xffE5E7Eb)),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: TextField(
@@ -952,7 +1054,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             width: 140,
                             padding: EdgeInsets.symmetric(horizontal: 16),
                             decoration: BoxDecoration(
-                              border: Border.all(width: 1, color: Color(0xffE5E7Eb)),
+                              border: Border.Border.all(width: 1, color: Color(0xffE5E7Eb)),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: TextField(
@@ -981,7 +1083,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             width: 140,
                             padding: EdgeInsets.symmetric(horizontal: 16),
                             decoration: BoxDecoration(
-                              border: Border.all(width: 1, color: Color(0xffE5E7Eb)),
+                              border: Border.Border.all(width: 1, color: Color(0xffE5E7Eb)),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: TextField(
@@ -1005,7 +1107,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             width: 140,
                             padding: EdgeInsets.symmetric(horizontal: 16),
                             decoration: BoxDecoration(
-                              border: Border.all(width: 1, color: Color(0xffE5E7Eb)),
+                              border: Border.Border.all(width: 1, color: Color(0xffE5E7Eb)),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: TextField(
@@ -1029,7 +1131,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             width: 140,
                             padding: EdgeInsets.symmetric(horizontal: 16),
                             decoration: BoxDecoration(
-                              border: Border.all(width: 1, color: Color(0xffE5E7Eb)),
+                              border: Border.Border.all(width: 1, color: Color(0xffE5E7Eb)),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: TextField(
@@ -1053,7 +1155,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             width: 140,
                             padding: EdgeInsets.symmetric(horizontal: 16),
                             decoration: BoxDecoration(
-                              border: Border.all(width: 1, color: Color(0xffE5E7Eb)),
+                              border: Border.Border.all(width: 1, color: Color(0xffE5E7Eb)),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: TextField(
@@ -1077,7 +1179,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             width: 140,
                             padding: EdgeInsets.symmetric(horizontal: 16),
                             decoration: BoxDecoration(
-                              border: Border.all(width: 1, color: Color(0xffE5E7Eb)),
+                              border: Border.Border.all(width: 1, color: Color(0xffE5E7Eb)),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: TextField(
@@ -1101,7 +1203,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             width: 140,
                             padding: EdgeInsets.symmetric(horizontal: 16),
                             decoration: BoxDecoration(
-                              border: Border.all(width: 1, color: Color(0xffE5E7Eb)),
+                              border: Border.Border.all(width: 1, color: Color(0xffE5E7Eb)),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: TextField(
@@ -1119,6 +1221,18 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                         ],
                       ),
+                      if (showError4)
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          child: Text(
+                            'MnemonicFailed'.tr,
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Color(0xffE32349),
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        )
                     ],
                   )
                 ],
@@ -1126,11 +1240,154 @@ class _MyHomePageState extends State<MyHomePage> {
               SizedBox(
                 height: 30,
               ),
-              InputRowWidget(title: 'EciesKEY'.tr, controller: eciesController, hint: 'Input'.tr),
+              InputRowWidget(
+                title: 'EciesKEY'.tr,
+                controller: eciesController,
+                hint: 'Input'.tr,
+                showParse: true,
+                showError: showError5,
+                errorMsg: 'InputEcies'.tr,
+              ),
               SizedBox(
                 height: 30,
               ),
-              InputRowWidget(title: 'RSAKey'.tr, controller: ricController, hint: 'Input'.tr),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 150,
+                    child: Text(
+                      'RSAKey'.tr,
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Colors.black),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 12,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      DropTarget(
+                        child: _rsaList.isEmpty
+                            ? Container(
+                                padding: EdgeInsets.symmetric(vertical: 48, horizontal: 130),
+                                decoration: BoxDecoration(
+                                    border: Border.Border.all(
+                                      width: 1,
+                                      color: Color(0xffE5E7Eb),
+                                    ),
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: Color(0xffF8F3FE)),
+                                child: Center(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Image.asset(
+                                        AssetsConstant.fileUpload,
+                                        width: 44,
+                                        height: 44,
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      Text(
+                                        'DropFile'.tr,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                          color: Color(0xff1F2937),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      Text(
+                                        'MaximumSize'.tr,
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                          color: Color(0xff9CA3AF),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              )
+                            : Stack(
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.symmetric(vertical: 48, horizontal: 130),
+                                    margin: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                                    decoration: BoxDecoration(
+                                        border: Border.Border.all(
+                                          width: 1,
+                                          color: Color(0xffE5E7EB),
+                                        ),
+                                        borderRadius: BorderRadius.circular(5),
+                                        color: Color(0xffF8FAFC)),
+                                    child: Center(
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Image.asset(
+                                            AssetsConstant.fileUploaded,
+                                            width: 44,
+                                            height: 44,
+                                          ),
+                                          SizedBox(
+                                            height: 8,
+                                          ),
+                                          Text(
+                                            'FileUploaded'.tr,
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500,
+                                              color: Color(0xffD1D5D8),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    right: 0,
+                                    top: 0,
+                                    child: GestureDetector(
+                                        onTap: () {
+                                          _rsaList.clear();
+                                          setState(() {});
+                                        },
+                                        child: Image.asset(
+                                          AssetsConstant.delete,
+                                          width: 20,
+                                          height: 20,
+                                        )),
+                                  ),
+                                ],
+                              ),
+                        onDragDone: (detail) async {
+                          setState(() {
+                            _rsaList.addAll(detail.files);
+                            if (_rsaList.isNotEmpty) {
+                              showError6 = false;
+                            }
+                            debugPrint('当前的路径：${_rsaList[0].path}');
+                          });
+                        },
+                      ),
+                      if (showError6)
+                        Text(
+                          'PleaseImport'.tr,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Color(0xffE32349),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        )
+                    ],
+                  )
+                ],
+              ),
               SizedBox(
                 height: 30,
               ),
@@ -1140,140 +1397,291 @@ class _MyHomePageState extends State<MyHomePage> {
                   Container(
                     width: 162,
                   ),
-                  Flexible(child: CommonButtonWidget(callback: () async {
-                    ///先check 参数是不是空的
-                    if (metaController.text.isEmpty ||
-                        _list.isEmpty ||
-                        chainId.isEmpty ||
-                        eciesController.text.isEmpty ||
-                        ricController.text.isEmpty ||
-                        controller1.text.isEmpty ||
-                        controller2.text.isEmpty ||
-                        controller3.text.isEmpty ||
-                        controller4.text.isEmpty ||
-                        controller5.text.isEmpty ||
-                        controller6.text.isEmpty ||
-                        controller7.text.isEmpty ||
-                        controller8.text.isEmpty ||
-                        controller9.text.isEmpty ||
-                        controller10.text.isEmpty ||
-                        controller11.text.isEmpty ||
-                        controller12.text.isEmpty ||
-                        controller13.text.isEmpty ||
-                        controller14.text.isEmpty ||
-                        controller15.text.isEmpty ||
-                        controller16.text.isEmpty ||
-                        controller17.text.isEmpty ||
-                        controller18.text.isEmpty ||
-                        controller19.text.isEmpty ||
-                        controller20.text.isEmpty ||
-                        controller21.text.isEmpty ||
-                        controller22.text.isEmpty ||
-                        controller23.text.isEmpty ||
-                        controller24.text.isEmpty) {
-                      debugPrint('当前的参数不能为空');
-                      EasyLoading.showToast('CompleteParameters'.tr);
-                    } else {
-                      helpWord = controller1.text +
-                          " " +
-                          controller2.text +
-                          " " +
-                          controller3.text +
-                          " " +
-                          controller4.text +
-                          " " +
-                          controller5.text +
-                          " " +
-                          controller6.text +
-                          " " +
-                          controller7.text +
-                          " " +
-                          controller8.text +
-                          " " +
-                          controller9.text +
-                          " " +
-                          controller10.text +
-                          " " +
-                          controller11.text +
-                          " " +
-                          controller12.text +
-                          " " +
-                          controller13.text +
-                          " " +
-                          controller14.text +
-                          " " +
-                          controller15.text +
-                          " " +
-                          controller16.text +
-                          " " +
-                          controller17.text +
-                          " " +
-                          controller18.text +
-                          " " +
-                          controller19.text +
-                          " " +
-                          controller20.text +
-                          " " +
-                          controller21.text +
-                          " " +
-                          controller22.text +
-                          " " +
-                          controller23.text +
-                          " " +
-                          controller24.text;
-                      // debugPrint('当前的第一个参数：${metaController.text.toString()}');
-                      debugPrint('当前的第2个参数：${chainId}');
-                      debugPrint('当前的第3个参数：${_list[0].path}');
-                      debugPrint('当前的第4个参数：${helpWord}');
-                      debugPrint('当前的第5个参数：${eciesController.text.toString()}');
-                      debugPrint('当前的第6个参数：${ricController.text.toString()}');
-                      String rsaStart = '-----BEGIN PRIVATE KEY-----';
-                      String rsaEnd = '-----END PRIVATE KEY-----';
-                      String rsaAdd = '-----BEGIN PRIVATE KEY-----\n';
-                      String rsaAddEnd = '\n-----END PRIVATE KEY-----';
-                      String rsa = ricController.text.toString();
-                      String temp = rsa.replaceAll(rsaStart, '').replaceAll(rsaEnd, '');
-                      String fStr = rsaAdd + temp;
-                      String fstr2 = fStr + rsaAddEnd;
-                      try {
-                        final res = await NativeLib().printHelloWrapper(_list[0].path, helpWord, eciesController.text.toString(), fstr2, metaController.text.toString(), chainId);
-                        if (res != null) {
-                          EasyLoading.showToast(res.data.toDartString(), duration: const Duration(seconds: 5));
-                          debugPrint('是否ok：${res.ok}');
-                          debugPrint('是否ok：${res.data.toDartString()}');
-                          if (res.ok == 1) {
-                            EasyLoading.showToast('RestoredSuccess'.tr);
-                            debugPrint('${res.data.toDartString()}');
-                            List resJson = json.decode(res.data.toDartString());
-                            List<ItemBean> items = resJson.map((e) => ItemBean.fromJson(e)).toList();
-                            resultList.clear();
-                            resultList.addAll(items);
-                            setState(() {});
-                            // final map = jsonDecode(res.data.toDartString());
-                          } else {
-                            EasyLoading.showToast(res.errMsg.toDartString());
-                          }
-                        } else {
-                          EasyLoading.showToast('RestoredFailed'.tr);
+                  Flexible(
+                    child:
+                        // CommonButtonWidget(callback: () async {
+                        //   var excel = Excel.createExcel();
+                        //   var sheet = excel['Sheet1'];
+                        //   sheet.appendRow([TextCellValue('Chain Name'),TextCellValue('Address'),TextCellValue('Child Extended Private Key'),]);
+                        //
+                        //   if(resultList.isNotEmpty){
+                        //     resultList.forEach((element) {
+                        //       sheet.appendRow([TextCellValue(element.CoinType),TextCellValue(element.Address),TextCellValue(element.PrivKey),]);
+                        //     });
+                        //   }else{
+                        //     sheet.appendRow([TextCellValue('element.CoinType'),TextCellValue('element.Address'),TextCellValue('element.PrivKey'),]);
+                        //   }
+                        //
+                        //   // Saving the file
+                        //   String? outputFile1 = await FilePicker.platform.saveFile(
+                        //     dialogTitle: 'Please select an output file:',
+                        //     fileName: 'output-file1.xlsx',
+                        //   );
+                        //
+                        //   if (outputFile1 == null) {
+                        //     debugPrint('当前的outputFile----$outputFile1');
+                        //     // User canceled the picker
+                        //   }else{
+                        //     debugPrint('当前的outputFile----$outputFile1');
+                        //     List<int>? fileBytes = excel.save();
+                        //     //print('saving executed in ${stopwatch.elapsed}');
+                        //     if (fileBytes != null) {
+                        //       File(path.join(outputFile1))
+                        //         ..createSync(recursive: true)
+                        //         ..writeAsBytesSync(fileBytes);
+                        //     }
+                        //   }
+                        //
+                        //   //stopwatch.reset();
+                        //
+                        // })),
+                        Flexible(child: CommonButtonWidget(callback: () async {
+                      ///先check 参数是不是空的
+                      if (metaController.text.isEmpty ||
+                          _list.isEmpty ||
+                          chainId.isEmpty ||
+                          eciesController.text.isEmpty ||
+                          _rsaList.isEmpty ||
+                          controller1.text.isEmpty ||
+                          controller2.text.isEmpty ||
+                          controller3.text.isEmpty ||
+                          controller4.text.isEmpty ||
+                          controller5.text.isEmpty ||
+                          controller6.text.isEmpty ||
+                          controller7.text.isEmpty ||
+                          controller8.text.isEmpty ||
+                          controller9.text.isEmpty ||
+                          controller10.text.isEmpty ||
+                          controller11.text.isEmpty ||
+                          controller12.text.isEmpty ||
+                          controller13.text.isEmpty ||
+                          controller14.text.isEmpty ||
+                          controller15.text.isEmpty ||
+                          controller16.text.isEmpty ||
+                          controller17.text.isEmpty ||
+                          controller18.text.isEmpty ||
+                          controller19.text.isEmpty ||
+                          controller20.text.isEmpty ||
+                          controller21.text.isEmpty ||
+                          controller22.text.isEmpty ||
+                          controller23.text.isEmpty ||
+                          controller24.text.isEmpty) {
+                        if (metaController.text.isEmpty) {
+                          showError1 = true;
                         }
-                      } catch (e) {
-                        EasyLoading.showToast("erro:$e");
+                        if (_list.isEmpty) {
+                          showError3 = true;
+                        }
+                        if (chainId.isEmpty) {
+                          showError2 = true;
+                        }
+                        if (eciesController.text.isEmpty) {
+                          showError5 = true;
+                        }
+                        if (_rsaList.isEmpty) {
+                          showError6 = true;
+                        }
+                        if (controller1.text.isEmpty ||
+                            controller2.text.isEmpty ||
+                            controller3.text.isEmpty ||
+                            controller4.text.isEmpty ||
+                            controller5.text.isEmpty ||
+                            controller6.text.isEmpty ||
+                            controller7.text.isEmpty ||
+                            controller8.text.isEmpty ||
+                            controller9.text.isEmpty ||
+                            controller10.text.isEmpty ||
+                            controller11.text.isEmpty ||
+                            controller12.text.isEmpty ||
+                            controller13.text.isEmpty ||
+                            controller14.text.isEmpty ||
+                            controller15.text.isEmpty ||
+                            controller16.text.isEmpty ||
+                            controller17.text.isEmpty ||
+                            controller18.text.isEmpty ||
+                            controller19.text.isEmpty ||
+                            controller20.text.isEmpty ||
+                            controller21.text.isEmpty ||
+                            controller22.text.isEmpty ||
+                            controller23.text.isEmpty ||
+                            controller24.text.isEmpty) {
+                          showError4 = true;
+                        }
+                        setState(() {});
+                      } else {
+                        showError1 = true;
+                        showError2 = true;
+                        showError3 = true;
+                        showError4 = true;
+                        showError5 = true;
+                        showError6 = true;
+                        setState(() {});
+                        helpWord = controller1.text.trim() +
+                            " " +
+                            controller2.text.trim() +
+                            " " +
+                            controller3.text.trim() +
+                            " " +
+                            controller4.text.trim() +
+                            " " +
+                            controller5.text.trim() +
+                            " " +
+                            controller6.text.trim() +
+                            " " +
+                            controller7.text.trim() +
+                            " " +
+                            controller8.text.trim() +
+                            " " +
+                            controller9.text.trim() +
+                            " " +
+                            controller10.text.trim() +
+                            " " +
+                            controller11.text.trim() +
+                            " " +
+                            controller12.text.trim() +
+                            " " +
+                            controller13.text.trim() +
+                            " " +
+                            controller14.text.trim() +
+                            " " +
+                            controller15.text.trim() +
+                            " " +
+                            controller16.text.trim() +
+                            " " +
+                            controller17.text.trim() +
+                            " " +
+                            controller18.text.trim() +
+                            " " +
+                            controller19.text.trim() +
+                            " " +
+                            controller20.text.trim() +
+                            " " +
+                            controller21.text.trim() +
+                            " " +
+                            controller22.text.trim() +
+                            " " +
+                            controller23.text.trim() +
+                            " " +
+                            controller24.text.trim();
+                        // debugPrint('当前的第一个参数：${metaController.text.toString()}');
+                        debugPrint('当前的第2个参数：${chainId}');
+                        debugPrint('当前的第3个参数：${_list[0].path}');
+                        debugPrint('当前的第4个参数：${helpWord}');
+                        debugPrint('当前的第5个参数：${eciesController.text.toString()}');
+                        debugPrint('当前的第6个参数：${_rsaList[0].path}');
+                        String rsaStart = '-----BEGIN PRIVATE KEY-----';
+                        String rsaEnd = '-----END PRIVATE KEY-----';
+                        String rsaAdd = '-----BEGIN PRIVATE KEY-----\n';
+                        String rsaAddEnd = '\n-----END PRIVATE KEY-----';
+                        String rsa = ricController.text.toString();
+                        String temp = rsa.replaceAll(rsaStart, '').replaceAll(rsaEnd, '');
+                        String fStr = rsaAdd + temp;
+                        String fstr2 = fStr + rsaAddEnd;
+                        try {
+                          final res = await NativeLib().printHelloWrapper(_list[0].path, helpWord, eciesController.text, _rsaList[0].path, metaController.text.toString(), chainId);
+                          if (res != null) {
+                            EasyLoading.showToast(res.data.toDartString(), duration: const Duration(seconds: 5));
+                            debugPrint('是否ok：${res.ok}');
+                            debugPrint('是否ok：${res.data.toDartString()}');
+                            if (res.ok == 1) {
+                              EasyLoading.showToast('RestoredSuccess'.tr);
+                              debugPrint('${res.data.toDartString()}');
+                              List resJson = json.decode(res.data.toDartString());
+                              List<ItemBean> items = resJson.map((e) => ItemBean.fromJson(e)).toList();
+                              resultList.clear();
+                              resultList.addAll(items);
+                              setState(() {});
+                              // final map = jsonDecode(res.data.toDartString());
+                            } else {
+                              EasyLoading.showToast(res.errMsg.toDartString());
+                            }
+                          } else {
+                            EasyLoading.showToast('RestoredFailed'.tr);
+                          }
+                        } catch (e) {
+                          EasyLoading.showToast("erro:$e");
+                        }
                       }
-                    }
-                  })),
+                    })),
+                  )
                 ],
               ),
+              if (resultList.isNotEmpty)
+                Container(
+                  height: 310,
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  color: Color(0xffF8FAFC),
+                  child: ListView.builder(
+                      itemCount: resultList.length,
+                      shrinkWrap: true,
+                      physics: ClampingScrollPhysics(),
+                      itemBuilder: (c, i) => privateKeyWidget(
+                            bean: resultList[i],
+                          )),
+                ),
+              if (resultList.isNotEmpty)
+                SizedBox(
+                  height: 30,
+                ),
+              if (resultList.isNotEmpty)
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Container(
+                      width: 162,
+                    ),
+                    Flexible(child: CommonButtonWidget(callback: () async {
+                      if (resultList.isEmpty) {
+                        EasyLoading.showToast('当前无可导出文件');
+                      } else {
+                        var excel = Excel.createExcel();
+                        var sheet = excel['Sheet1'];
+                        sheet.appendRow([
+                          TextCellValue('Chain Name'),
+                          TextCellValue('Address'),
+                          TextCellValue('Child Extended Private Key'),
+                        ]);
 
-              ListView.builder(
-                  itemCount: resultList.length,
-                  shrinkWrap: true,
-                  physics: ClampingScrollPhysics(),
-                  itemBuilder: (c, i) => privateKeyWidget(
-                        bean: resultList[i],
-                      )),
-              SizedBox(
-                height: 50,
-              )
+                        if (resultList.isNotEmpty) {
+                          resultList.forEach((element) {
+                            sheet.appendRow([
+                              TextCellValue(element.CoinType),
+                              TextCellValue(element.Address),
+                              TextCellValue(element.PrivKey),
+                            ]);
+                          });
+                        } else {
+                          sheet.appendRow([
+                            TextCellValue('element.CoinType'),
+                            TextCellValue('element.Address'),
+                            TextCellValue('element.PrivKey'),
+                          ]);
+                        }
+
+                        // Saving the file
+                        String? outputFile1 = await FilePicker.platform.saveFile(
+                          dialogTitle: 'Please select an output file:',
+                          fileName: 'PrivateKeyFile.xlsx',
+                        );
+
+                        if (outputFile1 == null) {
+                          debugPrint('当前的outputFile----$outputFile1');
+                          // User canceled the picker
+                        } else {
+                          debugPrint('当前的outputFile----$outputFile1');
+                          List<int>? fileBytes = excel.save();
+                          //print('saving executed in ${stopwatch.elapsed}');
+                          if (fileBytes != null) {
+                            File(path.join(outputFile1))
+                              ..createSync(recursive: true)
+                              ..writeAsBytesSync(fileBytes);
+                          }
+                        }
+                      }
+                      //stopwatch.reset();
+                    })),
+                  ],
+                ),
             ],
           ),
         ),

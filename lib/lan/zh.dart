@@ -21,5 +21,12 @@ const Map<String ,String> zh_CN = {
   "Confirm":"确认",
   "ChooseChain":"请选择链",
   "RestoredFailed":"恢复失败",
-  "CompleteParameters":"Please complete the parameters",
+  "CompleteParameters":"请完善信息",
+  "input1":"请正确填写团队的钱包数量",
+  "Export":"导出",
+  "PleaseImport":"请导入压缩文件",
+  "EnterAmount":"请输入钱包数量",
+  "EnterNet":"请选择网络",
+  "MnemonicFailed":"请输入助记词",
+  "InputEcies":"请输入ECIES KEY"
 };

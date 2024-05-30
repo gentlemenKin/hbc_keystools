@@ -6,4 +6,7 @@ class AssetsConstant {
   static const String moreIcon = 'assets/more.png';
   static const String commonDialgoClose = 'assets/dialog_close.png';
   static const String searchIcon = 'assets/search.png';
+  static const String fileUpload = 'assets/file_upload.png';
+  static const String fileUploaded = 'assets/file_uploaded.png';
+  static const String delete = 'assets/delete.png';
 }

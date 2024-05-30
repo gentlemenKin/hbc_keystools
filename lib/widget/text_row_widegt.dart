@@ -19,7 +19,7 @@ class TextRowWidget extends StatelessWidget {
           width: 150,
           child: Text(
             title,
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Colors.black),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black),
           ),
         ),
         SizedBox(
@@ -29,7 +29,8 @@ class TextRowWidget extends StatelessWidget {
           child: Container(
             width: double.infinity,
             padding: EdgeInsets.symmetric(horizontal: 16,vertical: 14),
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Color(0xffF3F4F6)),
+            color: Colors.transparent,
+            // decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Color(0xffF3F4F6)),
             child: Text(
               hint,
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Color(0xff6B7280)),
