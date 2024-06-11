@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 
 class InputRowWidget extends StatelessWidget {
   const InputRowWidget({
@@ -62,7 +63,7 @@ class InputRowWidget extends StatelessWidget {
                               controller.text = str?.text ?? '';
                             },
                             child: Text(
-                              'Paste',
+                              'paste'.tr,
                               style: TextStyle(
                                 color: Color(0xff9700E9),
                                 fontSize: 16,

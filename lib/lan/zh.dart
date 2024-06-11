@@ -11,7 +11,7 @@ const Map<String ,String> zh_CN = {
   "DropFile":'请将您的文件放到此处',
   "MaximumSize":'最大尺寸: 500M',
   "MnemonicWord":'助记词',
-  "EciesKEY":'Ecies 密钥',
+  "EciesKEY":'ECIES 密钥',
   "RSAKey":'RSA 密钥',
   "Generate":'生成全部私钥',
   "Address":'地址',
@@ -28,5 +28,13 @@ const Map<String ,String> zh_CN = {
   "EnterAmount":"请输入钱包数量",
   "EnterNet":"请选择网络",
   "MnemonicFailed":"请输入助记词",
-  "InputEcies":"请输入ECIES KEY"
+  "InputEcies":"请输入ECIES KEY",
+  "search":'搜索名称',
+  "dragNotice":'请将Secret Key文件拖入此处',
+  "dragNotice2":'请将RAS Key文件拖入此处',
+  "paste":'粘贴',
+  "chainName":'链名',
+  "title":"HyperBC私钥恢复工具",
+  "loading":'加载中',
+  "clear":'清空',
 };

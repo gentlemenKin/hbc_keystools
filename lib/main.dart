@@ -34,6 +34,15 @@ import 'package:flutter/src/painting/box_border.dart' as Border;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  EasyLoading.instance
+    ..loadingStyle = EasyLoadingStyle.dark
+    ..radius = 10.0
+    ..progressColor = Colors.yellow
+    ..backgroundColor = Colors.green
+    ..indicatorColor = Colors.yellow
+    ..textColor = Colors.yellow
+    ..maskColor = Colors.blue.withOpacity(0.5)
+    ..dismissOnTap = false;
   await trayManager.setIcon(
     Platform.isWindows ? AssetsConstant.trayIco : AssetsConstant.trayPng,
   );
@@ -152,7 +161,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int currentCoinIndex = -1;
   int currentWalletIndex = -1;
   String walletTypeName = 'Choose wallet type';
-  String chooseChainName = 'ChooseChain'.tr;
+  String chooseChainName = '';
   bool manualInput = false;
   final List<XFile> _list = [];
   List<ItemBean> resultList = [];
@@ -224,7 +233,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: [
                   Expanded(
                     child: Text(
-                      'HyperBC Vault Key Derivation Tool',
+                      'title'.tr,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 30,
@@ -325,54 +334,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 )
                               ],
                             ),
-                          )
-
-                          //     SelectChainDialog(
-                          //   chains: lan,
-                          //   callback: (String data) {
-                          //     int inde = lan.indexOf(data);
-                          //     currentLan = data;
-                          //     switch (inde) {
-                          //       case 0:
-                          //         Get.updateLocale(Locale('en', 'US'));
-                          //         break;
-                          //       case 1:
-                          //         Get.updateLocale(Locale('zh', 'CN'));
-                          //         break;
-                          //     }
-                          //     // currentWalletIndex = walletIndex[inde];
-                          //     // walletTypeName = data;
-                          //     // setState(() {});
-                          //     // debugPrint('当前的钱包index = $currentWalletIndex');
-                          //   },
-                          // )
-                          );
-                      // Get.dialog(DialogWidget(
-                      //     padding: EdgeInsets.zero,
-                      //     width: 600,
-                      //     height: 400,
-                      //     child:
-                      //     SelectChainDialog(
-                      //       chains: lan,
-                      //       callback: (String data) {
-                      //         int inde = lan.indexOf(data);
-                      //         currentLan = data;
-                      //         switch (inde) {
-                      //           case 0:
-                      //             Get.updateLocale(Locale('en', 'US'));
-                      //             break;
-                      //           case 1:
-                      //             Get.updateLocale(Locale('zh', 'CN'));
-                      //             break;
-                      //         }
-                      //         // currentWalletIndex = walletIndex[inde];
-                      //         // walletTypeName = data;
-                      //         // setState(() {});
-                      //         // debugPrint('当前的钱包index = $currentWalletIndex');
-                      //       },
-                      //     )
-                      // )
-                      // );
+                          ));
                     },
                     child: Container(
                       key: userPopKey,
@@ -441,7 +403,8 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               InputRowSelectWidget(
                 title: 'Chain'.tr,
-                hint: chooseChainName,
+                hint: 'ChooseChain'.tr,
+                content: chooseChainName,
                 callback: () {
                   Get.dialog(DialogWidget(
                       padding: EdgeInsets.zero,
@@ -517,7 +480,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                           height: 8,
                                         ),
                                         Text(
-                                          'DropFile'.tr,
+                                          'dragNotice'.tr,
                                           style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w500,
@@ -616,6 +579,50 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               SizedBox(
                 height: 30,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(right: 50,bottom: 10),
+                    child: GestureDetector(
+                      onTap: () {
+                        controller1.clear();
+                        controller2.clear();
+                        controller3.clear();
+                        controller4.clear();
+                        controller5.clear();
+                        controller6.clear();
+                        controller7.clear();
+                        controller8.clear();
+                        controller9.clear();
+                        controller10.clear();
+                        controller11.clear();
+                        controller12.clear();
+                        controller13.clear();
+                        controller14.clear();
+                        controller15.clear();
+                        controller16.clear();
+                        controller17.clear();
+                        controller18.clear();
+                        controller19.clear();
+                        controller20.clear();
+                        controller21.clear();
+                        controller22.clear();
+                        controller23.clear();
+                        controller24.clear();
+                      },
+                      child: Text(
+                        'clear'.tr,
+                        style: TextStyle(
+                          color: Color(0xff9700E9),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  )
+                ],
               ),
               Row(
                 children: [
@@ -1293,7 +1300,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                         height: 8,
                                       ),
                                       Text(
-                                        'DropFile'.tr,
+                                        'dragNotice2'.tr,
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w500,
@@ -1519,6 +1526,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           showError5 = false;
                           showError6 = false;
                           setState(() {});
+                          EasyLoading.showInfo('loading'.tr, duration: const Duration(milliseconds: 2000));
+
                           helpWord = controller1.text.trim() +
                               " " +
                               controller2.text.trim() +
@@ -1581,27 +1590,31 @@ class _MyHomePageState extends State<MyHomePage> {
                           String fStr = rsaAdd + temp;
                           String fstr2 = fStr + rsaAddEnd;
                           try {
-                            final res =
-                                await NativeLib().printHelloWrapper(_list[0].path, helpWord, eciesController.text, _rsaList[0].path, metaController.text.toString(), chainId);
-                            if (res != null) {
-                              EasyLoading.showToast(res.data.toDartString(), duration: const Duration(seconds: 5));
-                              debugPrint('是否ok：${res.ok}');
-                              debugPrint('是否ok：${res.data.toDartString()}');
-                              if (res.ok == 1) {
-                                EasyLoading.showToast('RestoredSuccess'.tr);
-                                debugPrint('${res.data.toDartString()}');
-                                List resJson = json.decode(res.data.toDartString());
-                                List<ItemBean> items = resJson.map((e) => ItemBean.fromJson(e)).toList();
-                                resultList.clear();
-                                resultList.addAll(items);
-                                setState(() {});
-                                // final map = jsonDecode(res.data.toDartString());
+                            Future.delayed(const Duration(milliseconds: 500)).then((value) async {
+                              final res = await NativeLib().printHelloWrapper(
+                                  _list[0].path, helpWord, eciesController.text.trim(), _rsaList[0].path, metaController.text.toString().trim(), chainId, currentLan);
+                              if (res != null) {
+                                EasyLoading.dismiss();
+                                // EasyLoading.showToast(res.data.toDartString(), duration: const Duration(seconds: 5));
+                                debugPrint('是否ok：${res.ok}');
+                                debugPrint('是否ok：${res.data.toDartString()}');
+                                if (res.ok == 1) {
+                                  EasyLoading.showToast('RestoredSuccess'.tr);
+                                  debugPrint('${res.data.toDartString()}');
+                                  List resJson = json.decode(res.data.toDartString());
+                                  List<ItemBean> items = resJson.map((e) => ItemBean.fromJson(e)).toList();
+                                  resultList.clear();
+                                  resultList.addAll(items);
+                                  setState(() {});
+                                  // final map = jsonDecode(res.data.toDartString());
+                                } else {
+                                  EasyLoading.showToast(res.errMsg.toDartString());
+                                }
                               } else {
-                                EasyLoading.showToast(res.errMsg.toDartString());
+                                EasyLoading.dismiss();
+                                EasyLoading.showToast('RestoredFailed'.tr);
                               }
-                            } else {
-                              EasyLoading.showToast('RestoredFailed'.tr);
-                            }
+                            });
                           } catch (e) {
                             EasyLoading.showToast("erro:$e");
                           }
@@ -1645,9 +1658,9 @@ class _MyHomePageState extends State<MyHomePage> {
                           var excel = Excel.createExcel();
                           var sheet = excel['Sheet1'];
                           sheet.appendRow([
-                            TextCellValue('Chain Name'),
-                            TextCellValue('Address'),
-                            TextCellValue('Child Extended Private Key'),
+                            TextCellValue('chainName'.tr),
+                            TextCellValue('Address'.tr),
+                            TextCellValue('ChildExtended'.tr),
                           ]);
 
                           if (resultList.isNotEmpty) {

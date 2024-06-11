@@ -12,7 +12,7 @@ const Map<String,String> en_US = {
   "DropFile":'Drop your files here',
   "MaximumSize":'Maximum size: 500M',
   "MnemonicWord":'Mnemonic word',
-  "EciesKEY":'Ecies KEY',
+  "EciesKEY":'ECIES KEY',
   "RSAKey":'RSA KEY',
   "Generate":'Generate Child Extended Private KEY',
   "Address":'Address',
@@ -29,5 +29,13 @@ const Map<String,String> en_US = {
   "EnterAmount":"Please enter the wallet amount",
   "EnterNet":"Please select a network",
   "MnemonicFailed":"Please enter the mnemonic",
-  "InputEcies":"Please Enter ECIES KEY"
+  "InputEcies":"Please Enter ECIES KEY",
+  "search":'Input Search Name',
+  "dragNotice":'Please drag the Secret Key file here',
+  "dragNotice2":'Please drag the RAS Key file here',
+  "paste":'paste',
+  "chainName":'Chain Name',
+  "title":"HyperBC Vault Key Derivation Tool",
+  "loading":'loading',
+  "clear":'Clear',
 };

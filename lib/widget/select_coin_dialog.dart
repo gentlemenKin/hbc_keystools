@@ -49,7 +49,7 @@ class _SelectCoinDialogState extends State<SelectCoinDialog> {
             padding: const EdgeInsets.symmetric(horizontal: 7),
             child: SearchTextField(
               width: 100,
-              hintText: '搜索名称',
+              hintText: 'search'.tr,
               onSearch: (searchText) {
                 data = iniData.where((element) => element.userName.toUpperCase().contains(searchText.toString().toUpperCase())).toList();
                 // if (ids.isNotEmpty && data.isNotEmpty) {

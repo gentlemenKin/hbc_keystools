@@ -48,12 +48,9 @@ typedef PrintHelloDart = GoString Function(
 typedef SumFunc = Int32 Function(Int32 a, Int32 b);
 typedef Sum = int Function(int a, int b);
 
-typedef GetKeyC = GoString Function(
-);
+typedef GetKeyC = GoString Function();
 // Define the function signature in Dart
-typedef GetKeyDart = GoString Function(
-);
-
+typedef GetKeyDart = GoString Function();
 
 typedef GetRecoveryC = RSResult Function(
   GoString name,
@@ -62,6 +59,7 @@ typedef GetRecoveryC = RSResult Function(
   GoString str2,
   GoString str3,
   GoString str4,
+  GoString str5,
 );
 
 typedef GetRecoveryDart = RSResult Function(
@@ -71,6 +69,7 @@ typedef GetRecoveryDart = RSResult Function(
   GoString str2,
   GoString str3,
   GoString str4,
+  GoString str5,
 );
 
 class NativeLib {
@@ -93,7 +92,6 @@ class NativeLib {
         return null;
       }
     } else {
-
       return ffi.DynamicLibrary.open('recovery_tool.dll');
     }
   }
@@ -109,7 +107,7 @@ class NativeLib {
     }
   }
 
-  Future<GetKeyDart?> getKeyFun()async{
+  Future<GetKeyDart?> getKeyFun() async {
     final _dylib = await getLib();
     debugPrint('当前的cpu ----${_dylib.toString()}');
     if (_dylib != null) {
@@ -119,8 +117,7 @@ class NativeLib {
     }
   }
 
-
-  Future<GoString?> getChainList()async{
+  Future<GoString?> getChainList() async {
     final fun = await getKeyFun();
     GoString? result;
     if (fun != null) {
@@ -130,7 +127,6 @@ class NativeLib {
     }
     return result;
   }
-
 
   static RSResult test(String str) {
     final namePtr = str.toNativeUtf8();
@@ -192,6 +188,7 @@ class NativeLib {
     String str2,
     String str3,
     String string4,
+    String str5,
   ) async {
     final namePtr = name.toNativeUtf8();
     final goString = malloc<GoString>();
@@ -229,6 +226,12 @@ class NativeLib {
       ..p = params5
       ..n = params5.length;
 
+    final params6 = str5.toNativeUtf8();
+    final goString6 = malloc<GoString>();
+    goString6.ref
+      ..p = params6
+      ..n = params6.length;
+
     final fun = await getFun();
     RSResult? result;
     if (fun != null) {
@@ -239,6 +242,7 @@ class NativeLib {
         goString3.ref,
         goString4.ref,
         goString5.ref,
+        goString6.ref,
       );
     } else {
       result = null;
@@ -264,6 +268,9 @@ class NativeLib {
 
     malloc.free(params5);
     malloc.free(goString5);
+
+    malloc.free(params6);
+    malloc.free(goString6);
     return result;
   }
 }

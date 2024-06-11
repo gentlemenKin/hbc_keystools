@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hbc_keystools/local/constant.dart';
 
@@ -29,10 +30,23 @@ class _SearchTextFieldState extends State<SearchTextField> {
   TextEditingController searchController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    searchController.addListener(() {
+      widget.onSearch(searchController.text);
+    });
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+  @override
   Widget build(BuildContext context) {
     return Container(
       height: widget.height,
-      width: 160,
+      width: 260,
       alignment: Alignment.center,
       padding: const EdgeInsets.only(right: 12),
       decoration: BoxDecoration(
@@ -47,8 +61,7 @@ class _SearchTextFieldState extends State<SearchTextField> {
       ),
       child: Row(
         children: [
-          SizedBox(
-            width: widget.width,
+          Expanded(
             child: TextField(
               controller: searchController,
               onChanged: (value) {
@@ -58,7 +71,7 @@ class _SearchTextFieldState extends State<SearchTextField> {
               },
               onSubmitted: (value) {
                 // print(value);
-                widget.onSearch(searchController.text);
+            
               },
               style: TextStyle(
                 // fontSize: 14,

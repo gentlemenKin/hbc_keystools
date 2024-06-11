@@ -10,12 +10,14 @@ class InputRowSelectWidget extends StatelessWidget {
     required this.callback,
     required this.showError,
     required this.errorMsg,
+    required this.content,
   }) : super(key: key);
   final String title;
   final String hint;
   final GestureTapCallback callback;
   final bool showError;
   final String errorMsg;
+  final String content;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -46,7 +48,7 @@ class InputRowSelectWidget extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        hint,
+                        content.isEmpty?hint:content,
                         style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Color(0xff6B7280)),
                       ),
                       Image.asset(AssetsConstant.moreIcon,height: 16,width: 16,)

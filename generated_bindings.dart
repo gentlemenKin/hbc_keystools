@@ -77,6 +77,7 @@ class NativeLibrary {
     GoString rsaPrivKeyPath,
     GoString vaultCount,
     GoString chains,
+    GoString language,
   ) {
     return _GoRecovery(
       zipPath,
@@ -85,16 +86,17 @@ class NativeLibrary {
       rsaPrivKeyPath,
       vaultCount,
       chains,
+      language,
     );
   }
 
   late final _GoRecoveryPtr = _lookup<
       ffi.NativeFunction<
           RSResult Function(GoString, GoString, GoString, GoString, GoString,
-              GoString)>>('GoRecovery');
+              GoString, GoString)>>('GoRecovery');
   late final _GoRecovery = _GoRecoveryPtr.asFunction<
-      RSResult Function(
-          GoString, GoString, GoString, GoString, GoString, GoString)>();
+      RSResult Function(GoString, GoString, GoString, GoString, GoString,
+          GoString, GoString)>();
 }
 
 final class __mbstate_t extends ffi.Union {
