@@ -22,6 +22,7 @@ import 'package:hbc_keystools/widget/private_key_widget.dart';
 import 'package:hbc_keystools/widget/select_coin_dialog.dart';
 import 'package:hbc_keystools/widget/selecte_chain_dialog.dart';
 import 'package:hbc_keystools/widget/text_row_widegt.dart';
+import 'package:hbc_keystools/window_watcher.dart';
 import 'package:tray_manager/tray_manager.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:cross_file/cross_file.dart';
@@ -60,10 +61,10 @@ void main() async {
 
   await windowManager.ensureInitialized();
   windowManager.waitUntilReadyToShow(
-      const WindowOptions(
-        size: Size(1280, 800),
-        minimumSize: Size(1280, 800),
-
+       WindowOptions(
+        // size: Platform.isMacOS?Size(1280, 800):Size(800, 600),
+         size: Size(1280, 800),
+        minimumSize: Size(800, 600),
         center: true,
         title: 'HBC桌面端应用',
         backgroundColor: Colors.transparent,
@@ -87,18 +88,20 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+    return WindowWatcher(
+      child: GetMaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+        ),
+        debugShowCheckedModeBanner: false,
+        builder: EasyLoading.init(),
+        locale: Locale('en', 'US'),
+        translations: TranslationService(),
+        fallbackLocale: TranslationService.fallbackLocale,
+        home: const MyHomePage(title: 'Flutter Demo Home Page'),
       ),
-      debugShowCheckedModeBanner: false,
-      builder: EasyLoading.init(),
-      locale: Locale('en', 'US'),
-      translations: TranslationService(),
-      fallbackLocale: TranslationService.fallbackLocale,
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
@@ -1445,6 +1448,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         //
                         // })),
                         CommonButtonWidget(
+
                       callback: () async {
                         ///先check 参数是不是空的
                         if (metaController.text.isEmpty ||

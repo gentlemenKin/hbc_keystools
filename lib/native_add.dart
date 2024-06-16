@@ -76,7 +76,7 @@ class NativeLib {
   // Load the dynamic library
   // var libraryPath = path.join(Directory.current.path, 'recovery_tool.dylib');
 
-  static final DynamicLibrary _dylib = ffi.DynamicLibrary.open(Platform.isMacOS ? 'lib_recovery_tool.dylib' : 'recovery_tool.dll');
+  static final DynamicLibrary _dylib = ffi.DynamicLibrary.open(Platform.isMacOS ? 'lib_recovery_tool.dylib' : './assets/recovery_tool.dll');
 
   static final GetRSResultDart dartFunction = _dylib.lookupFunction<GetRSResultC, GetRSResultDart>('GetRSResult');
 
@@ -92,7 +92,7 @@ class NativeLib {
         return null;
       }
     } else {
-      return ffi.DynamicLibrary.open('recovery_tool.dll');
+      return ffi.DynamicLibrary.open('./assets/recovery_tool.dll');
     }
   }
 
