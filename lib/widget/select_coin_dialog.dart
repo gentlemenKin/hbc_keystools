@@ -15,7 +15,7 @@ class SelectCoinDialog extends StatefulWidget {
   State<SelectCoinDialog> createState() => _SelectCoinDialogState();
 }
 
-class _SelectCoinDialogState extends State<SelectCoinDialog> {
+class _SelectCoinDialogState extends State<SelectCoinDialog> with AutomaticKeepAliveClientMixin{
   final List<SponsorBean> ids = [];
   List<SponsorBean> data = [];
   List<SponsorBean> iniData = [];
@@ -126,6 +126,10 @@ class _SelectCoinDialogState extends State<SelectCoinDialog> {
       ),
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }
 
 class SponsorItemWidget extends StatefulWidget {
@@ -145,7 +149,7 @@ class SponsorItemWidget extends StatefulWidget {
   State<SponsorItemWidget> createState() => _SponsorItemWidgetState();
 }
 
-class _SponsorItemWidgetState extends State<SponsorItemWidget> {
+class _SponsorItemWidgetState extends State<SponsorItemWidget> with AutomaticKeepAliveClientMixin{
   // final List<String> ids = [];
   bool select = false;
 
@@ -208,6 +212,10 @@ class _SponsorItemWidgetState extends State<SponsorItemWidget> {
       ),
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 
 }
 

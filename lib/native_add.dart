@@ -111,7 +111,7 @@ class NativeLib {
     final _dylib = await getLib();
     debugPrint('当前的cpu ----${_dylib.toString()}');
     if (_dylib != null) {
-      return _dylib.lookupFunction<GetKeyC, GetKeyDart>('GetChainList');
+      return _dylib.lookupFunction<GetKeyC, GetKeyDart>('MacGetChainList');
     } else {
       return null;
     }

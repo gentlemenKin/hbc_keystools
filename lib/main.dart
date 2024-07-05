@@ -66,7 +66,7 @@ void main() async {
          size: Size(1280, 800),
         minimumSize: Size(800, 600),
         center: true,
-        title: 'HBC桌面端应用',
+        title: 'KeyRecovery',
         backgroundColor: Colors.transparent,
         skipTaskbar: false,
         titleBarStyle: TitleBarStyle.hidden,
@@ -90,7 +90,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return WindowWatcher(
       child: GetMaterialApp(
-        title: 'Flutter Demo',
+        title: 'KeyRecovery',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,

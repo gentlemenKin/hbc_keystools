@@ -31,10 +31,10 @@ const Map<String ,String> zh_CN = {
   "InputEcies":"请输入ECIES KEY",
   "search":'搜索名称',
   "dragNotice":'请将Secret Key文件拖入此处',
-  "dragNotice2":'请将RAS Key文件拖入此处',
+  "dragNotice2":'请将RSA Key文件拖入此处',
   "paste":'粘贴',
   "chainName":'链名',
-  "title":"HyperBC私钥恢复工具",
+  "title":"CipherBC私钥恢复工具",
   "loading":'加载中',
   "clear":'清空',
 };

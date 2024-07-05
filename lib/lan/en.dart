@@ -32,10 +32,10 @@ const Map<String,String> en_US = {
   "InputEcies":"Please Enter ECIES KEY",
   "search":'Input Search Name',
   "dragNotice":'Please drag the Secret Key file here',
-  "dragNotice2":'Please drag the RAS Key file here',
+  "dragNotice2":'Please drag the RSA Key file here',
   "paste":'paste',
   "chainName":'Chain Name',
-  "title":"HyperBC Vault Key Derivation Tool",
+  "title":"CipherBC Vault Key Derivation Tool",
   "loading":'loading',
   "clear":'Clear',
 };
