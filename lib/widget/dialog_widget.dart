@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../local/color_constant.dart';
 import '../local/constant.dart';
 class DialogWidget extends StatelessWidget {
   const DialogWidget({
@@ -23,7 +24,7 @@ class DialogWidget extends StatelessWidget {
       // alignment: Alignment.center,
       alignment: alignment,
       child: Material(
-        color: Colors.white,
+        color: ColorConstant.color_0xffffff,
         clipBehavior: Clip.hardEdge,
         borderRadius: BorderRadius.circular(16),
         child: Stack(

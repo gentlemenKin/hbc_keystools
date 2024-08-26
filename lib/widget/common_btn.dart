@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hbc_keystools/local/color_constant.dart';
 
 class CommonButtonWidget extends StatelessWidget {
   const CommonButtonWidget({Key? key, required this.callback,required this.string}) : super(key: key);
@@ -13,12 +14,12 @@ class CommonButtonWidget extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 14),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: Color(0xff9700E9),
+          color: ColorConstant.themeColor,
         ),
         child: Center(
           child: Text(
             string,
-            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16, color: Colors.white),
+            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16, color: ColorConstant.color_0x000000),
           ),
         ),
       ),

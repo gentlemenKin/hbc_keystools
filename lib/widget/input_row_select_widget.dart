@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../local/color_constant.dart';
 import '../local/constant.dart';
 
 class InputRowSelectWidget extends StatelessWidget {
@@ -29,7 +30,7 @@ class InputRowSelectWidget extends StatelessWidget {
             width: 150,
             child: Text(
               title,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Colors.black),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: ColorConstant.color_0x000000),
             ),
           ),
           SizedBox(width: 12,),
@@ -40,7 +41,7 @@ class InputRowSelectWidget extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.symmetric( horizontal: 16,vertical: 12),
                   decoration: BoxDecoration(
-                    border: Border.all(width: 1, color: Color(0xffE5E7Eb)),
+                    border: Border.all(width: 1, color: ColorConstant.color_0xffE5E7Eb),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Row(
@@ -49,7 +50,7 @@ class InputRowSelectWidget extends StatelessWidget {
                     children: [
                       Text(
                         content.isEmpty?hint:content,
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Color(0xff6B7280)),
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: ColorConstant.color_0xff6B7280),
                       ),
                       Image.asset(AssetsConstant.moreIcon,height: 16,width: 16,)
                     ],
@@ -60,7 +61,7 @@ class InputRowSelectWidget extends StatelessWidget {
                     errorMsg,
                     style: TextStyle(
                       fontSize: 14,
-                      color: Color(0xffE32349),
+                      color: ColorConstant.color_0xffE32349,
                       fontWeight: FontWeight.w500,
                     ),
                   )

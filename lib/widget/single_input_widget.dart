@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hbc_keystools/local/color_constant.dart';
 
 class SingleInputWidget extends StatelessWidget {
   const SingleInputWidget({Key? key, required this.hint, required this.controller}) : super(key: key);
@@ -13,16 +14,16 @@ class SingleInputWidget extends StatelessWidget {
       margin: EdgeInsets.only(left: 10),
       padding: EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        border: Border.all(width: 1, color: Color(0xffE5E7Eb)),
+        border: Border.all(width: 1, color: ColorConstant.color_0xffE5E7Eb),
         borderRadius: BorderRadius.circular(10),
       ),
       child: TextField(
         controller: controller,
-        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Color(0xff6B7280)),
+        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: ColorConstant.color_0xff6B7280),
         decoration: InputDecoration(
           border: InputBorder.none,
           hintText: hint,
-          hintStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Color(0xff6B7280)),
+          hintStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: ColorConstant.color_0xff6B7280),
         ),
       ),
     );
@@ -30,7 +31,7 @@ class SingleInputWidget extends StatelessWidget {
     //   Container(
     //   padding: EdgeInsets.symmetric( horizontal: 16),
     //   decoration: BoxDecoration(
-    //     border: Border.all(width: 1, color: Color(0xffE5E7Eb)),
+    //     border: Border.all(width: 1, color: ColorConstant.color_0xffE5E7Eb),
     //     borderRadius: BorderRadius.circular(10),
     //   ),
     //   child: TextField(

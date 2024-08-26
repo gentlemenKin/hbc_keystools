@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hbc_keystools/local/constant.dart';
 
+import '../local/color_constant.dart';
+
 class SearchTextField extends StatefulWidget {
   const SearchTextField({
     super.key,
@@ -51,12 +53,12 @@ class _SearchTextFieldState extends State<SearchTextField> {
       padding: const EdgeInsets.only(right: 12),
       decoration: BoxDecoration(
         color: widget.type == 'noborder'
-            ? const Color(0xffF3F4F6)
-            : const Color(0xffffffff),
+            ? ColorConstant.color_0xffF3F4F6
+            : ColorConstant.color_0xffffff,
         borderRadius: BorderRadius.circular(widget.type == 'noborder' ? 20 : 4),
         border: Border.all(
           width: 1,
-          color: const Color(0xffE5E7EB),
+          color:  ColorConstant.color_0xffE5E7Eb,
         ),
       ),
       child: Row(
@@ -76,7 +78,7 @@ class _SearchTextFieldState extends State<SearchTextField> {
               style: TextStyle(
                 // fontSize: 14,
                 fontSize: widget.fontSize,
-                color: const Color(0xff000000),
+                color: ColorConstant.color_0x000000,
                 fontWeight: FontWeight.w400,
               ),
               decoration: InputDecoration(

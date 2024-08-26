@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hbc_keystools/local/color_constant.dart';
 
 class SubmitBtnWidget extends StatelessWidget {
   const SubmitBtnWidget({
@@ -23,7 +24,7 @@ class SubmitBtnWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(4),
             border: hasBorder
                 ? Border.all(
-              color: Color(0xffE5E7EB),
+              color: ColorConstant.color_0xffE5E7Eb,
             )
                 : null,
             color: bgColor),
@@ -31,7 +32,7 @@ class SubmitBtnWidget extends StatelessWidget {
           content,
           style: TextStyle(
             fontSize: 14,
-            color: hasBorder ? Colors.black : Colors.white,
+            color: hasBorder ? ColorConstant.color_0x000000 : ColorConstant.color_0xffffff,
           ),
         ),
       ),

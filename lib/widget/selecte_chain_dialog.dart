@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hbc_keystools/local/color_constant.dart';
+import 'package:hbc_keystools/widget/select_coin_dialog.dart';
 import 'package:hbc_keystools/widget/submit_btn.dart';
 
 import 'item_widget.dart';
@@ -8,7 +10,7 @@ typedef SelectSponsorCallBack = Function(String data);
 
 class SelectChainDialog extends StatefulWidget {
   const SelectChainDialog({Key? key, required this.chains, required this.callback}) : super(key: key);
-  final List<String> chains;
+  final List<SponsorBean> chains;
   final SelectSponsorCallBack callback;
 
   @override
@@ -17,7 +19,7 @@ class SelectChainDialog extends StatefulWidget {
 
 class _SelectChainDialogState extends State<SelectChainDialog> {
   String chainName = '';
-  List<String> iniData = [];
+  List<SponsorBean> iniData = [];
 
   @override
   void initState() {
@@ -31,7 +33,7 @@ class _SelectChainDialogState extends State<SelectChainDialog> {
       height: 250,
       width: 120,
       padding: const EdgeInsets.only(top: 8),
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.white),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: ColorConstant.color_0xffffff),
       child: Column(
         children: [
           // Padding(
@@ -59,16 +61,16 @@ class _SelectChainDialogState extends State<SelectChainDialog> {
                   itemCount: iniData.length,
                   itemBuilder: (context, i) => ItemWidget(
                         title: iniData[i],
-                        callback: (String name) {
-                          chainName = name;
-                        },
+                        callback: (int index) {
+                          // chainName = name;
+                        }, index: i,
                       ))),
           Container(
             height: 58,
             child: Column(
               children: [
                 Container(
-                  color: Color(0xffE5E7EB),
+                  color: ColorConstant.color_0xffE5E7Eb,
                   height: 1,
                   width: double.infinity,
                 ),
@@ -81,7 +83,7 @@ class _SelectChainDialogState extends State<SelectChainDialog> {
                     Spacer(),
                     SubmitBtnWidget(
                         content: 'Cancel'.tr,
-                        bgColor: Colors.white,
+                        bgColor: ColorConstant.color_0xffffff,
                         hasBorder: true,
                         callback: () {
                           Get.back();
@@ -91,7 +93,7 @@ class _SelectChainDialogState extends State<SelectChainDialog> {
                     ),
                     SubmitBtnWidget(
                         content: 'Confirm'.tr,
-                        bgColor: Color(0xff7618E8),
+                        bgColor: ColorConstant.themeColor,
                         hasBorder: false,
                         callback: () {
                           widget.callback(chainName);

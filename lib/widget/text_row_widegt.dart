@@ -1,5 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../local/color_constant.dart';
 
 class TextRowWidget extends StatelessWidget {
   const TextRowWidget({
@@ -19,7 +20,7 @@ class TextRowWidget extends StatelessWidget {
           width: 150,
           child: Text(
             title,
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: ColorConstant.color_0x000000),
           ),
         ),
         SizedBox(
@@ -33,7 +34,7 @@ class TextRowWidget extends StatelessWidget {
             // decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Color(0xffF3F4F6)),
             child: Text(
               hint,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Color(0xff6B7280)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: ColorConstant.color_0xff6B7280),
             ),
           ),
         )

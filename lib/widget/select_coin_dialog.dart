@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:hbc_keystools/widget/search_textfield.dart';
 import 'package:hbc_keystools/widget/submit_btn.dart';
 
+import '../local/color_constant.dart';
+
 typedef SelectSponsorCallBack = Function(List<SponsorBean> data);
 typedef IsItemSelect = Function(String id, bool selected);
 
@@ -42,7 +44,7 @@ class _SelectCoinDialogState extends State<SelectCoinDialog> with AutomaticKeepA
       height: 370,
       width: 288,
       padding: const EdgeInsets.only(top: 8),
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.white),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: ColorConstant.color_0xffffff),
       child: Column(
         children: [
           Padding(
@@ -85,7 +87,7 @@ class _SelectCoinDialogState extends State<SelectCoinDialog> with AutomaticKeepA
             child: Column(
               children: [
                 Container(
-                  color: Color(0xffE5E7Eb),
+                  color: ColorConstant.color_0xffE5E7Eb,
                   height: 1,
                   width: double.infinity,
                 ),
@@ -98,7 +100,7 @@ class _SelectCoinDialogState extends State<SelectCoinDialog> with AutomaticKeepA
                     Spacer(),
                     SubmitBtnWidget(
                         content: 'Cancel'.tr,
-                        bgColor: Colors.white,
+                        bgColor: ColorConstant.color_0xffffff,
                         hasBorder: true,
                         callback: () {
                           Get.back();
@@ -198,7 +200,7 @@ class _SponsorItemWidgetState extends State<SponsorItemWidget> with AutomaticKee
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
-                    color: Colors.black,
+                    color: ColorConstant.color_0x000000,
                   ),
                 ),
                 const SizedBox(
