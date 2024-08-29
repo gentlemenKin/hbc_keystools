@@ -23,7 +23,7 @@ import 'package:hbc_keystools/widget/select_coin_dialog.dart';
 
 import 'chain_result_bean.dart';
 import 'local/constant.dart';
-import 'native_add.dart';
+import 'native.dart';
 import 'package:path/path.dart' as path;
 import 'package:excel/excel.dart' as excel;
 import 'package:flutter/src/painting/box_border.dart' as Border;

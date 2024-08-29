@@ -19,20 +19,6 @@ class NativeLibrary {
           lookup)
       : _lookup = lookup;
 
-  ffi.Pointer<ffi.Char> GetKey(
-    GoString youKey,
-  ) {
-    return _GetKey(
-      youKey,
-    );
-  }
-
-  late final _GetKeyPtr =
-      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Char> Function(GoString)>>(
-          'GetKey');
-  late final _GetKey =
-      _GetKeyPtr.asFunction<ffi.Pointer<ffi.Char> Function(GoString)>();
-
   int SumTest(
     int a,
     int b,
@@ -47,160 +33,36 @@ class NativeLibrary {
       _lookup<ffi.NativeFunction<ffi.Int Function(GoInt, GoInt)>>('SumTest');
   late final _SumTest = _SumTestPtr.asFunction<int Function(int, int)>();
 
-  RSResult GetRSResult(
-    GoString s,
-  ) {
-    return _GetRSResult(
-      s,
-    );
+  ffi.Pointer<ffi.Char> GetChainList1() {
+    return _GetChainList1();
   }
 
-  late final _GetRSResultPtr =
-      _lookup<ffi.NativeFunction<RSResult Function(GoString)>>('GetRSResult');
-  late final _GetRSResult =
-      _GetRSResultPtr.asFunction<RSResult Function(GoString)>();
+  late final _GetChainList1Ptr =
+      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Char> Function()>>(
+          'GetChainList1');
+  late final _GetChainList1 =
+      _GetChainList1Ptr.asFunction<ffi.Pointer<ffi.Char> Function()>();
 
-  ffi.Pointer<ffi.Char> GetChainList() {
+  RSResult GetChainList() {
     return _GetChainList();
   }
 
   late final _GetChainListPtr =
-      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Char> Function()>>(
-          'GetChainList');
-  late final _GetChainList =
-      _GetChainListPtr.asFunction<ffi.Pointer<ffi.Char> Function()>();
+      _lookup<ffi.NativeFunction<RSResult Function()>>('GetChainList');
+  late final _GetChainList = _GetChainListPtr.asFunction<RSResult Function()>();
 
-  RSResult GoRecovery(
-    GoString zipPath,
-    GoString userMnemonic,
-    GoString eciesPrivKey,
-    GoString rsaPrivKeyPath,
-    GoString vaultCount,
-    GoString chains,
-    GoString language,
-  ) {
-    return _GoRecovery(
-      zipPath,
-      userMnemonic,
-      eciesPrivKey,
-      rsaPrivKeyPath,
-      vaultCount,
-      chains,
-      language,
-    );
+  ffi.Pointer<ffi.Char> MacGetChainList() {
+    return _MacGetChainList();
   }
 
-  late final _GoRecoveryPtr = _lookup<
-      ffi.NativeFunction<
-          RSResult Function(GoString, GoString, GoString, GoString, GoString,
-              GoString, GoString)>>('GoRecovery');
-  late final _GoRecovery = _GoRecoveryPtr.asFunction<
-      RSResult Function(GoString, GoString, GoString, GoString, GoString,
-          GoString, GoString)>();
+  late final _MacGetChainListPtr =
+      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Char> Function()>>(
+          'MacGetChainList');
+  late final _MacGetChainList =
+      _MacGetChainListPtr.asFunction<ffi.Pointer<ffi.Char> Function()>();
 }
 
-final class __mbstate_t extends ffi.Union {
-  @ffi.Array.multi([128])
-  external ffi.Array<ffi.Char> __mbstate8;
-
-  @ffi.LongLong()
-  external int _mbstateL;
-}
-
-final class __darwin_pthread_handler_rec extends ffi.Struct {
-  external ffi
-      .Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>
-      __routine;
-
-  external ffi.Pointer<ffi.Void> __arg;
-
-  external ffi.Pointer<__darwin_pthread_handler_rec> __next;
-}
-
-final class _opaque_pthread_attr_t extends ffi.Struct {
-  @ffi.Long()
-  external int __sig;
-
-  @ffi.Array.multi([56])
-  external ffi.Array<ffi.Char> __opaque;
-}
-
-final class _opaque_pthread_cond_t extends ffi.Struct {
-  @ffi.Long()
-  external int __sig;
-
-  @ffi.Array.multi([40])
-  external ffi.Array<ffi.Char> __opaque;
-}
-
-final class _opaque_pthread_condattr_t extends ffi.Struct {
-  @ffi.Long()
-  external int __sig;
-
-  @ffi.Array.multi([8])
-  external ffi.Array<ffi.Char> __opaque;
-}
-
-final class _opaque_pthread_mutex_t extends ffi.Struct {
-  @ffi.Long()
-  external int __sig;
-
-  @ffi.Array.multi([56])
-  external ffi.Array<ffi.Char> __opaque;
-}
-
-final class _opaque_pthread_mutexattr_t extends ffi.Struct {
-  @ffi.Long()
-  external int __sig;
-
-  @ffi.Array.multi([8])
-  external ffi.Array<ffi.Char> __opaque;
-}
-
-final class _opaque_pthread_once_t extends ffi.Struct {
-  @ffi.Long()
-  external int __sig;
-
-  @ffi.Array.multi([8])
-  external ffi.Array<ffi.Char> __opaque;
-}
-
-final class _opaque_pthread_rwlock_t extends ffi.Struct {
-  @ffi.Long()
-  external int __sig;
-
-  @ffi.Array.multi([192])
-  external ffi.Array<ffi.Char> __opaque;
-}
-
-final class _opaque_pthread_rwlockattr_t extends ffi.Struct {
-  @ffi.Long()
-  external int __sig;
-
-  @ffi.Array.multi([16])
-  external ffi.Array<ffi.Char> __opaque;
-}
-
-final class _opaque_pthread_t extends ffi.Struct {
-  @ffi.Long()
-  external int __sig;
-
-  external ffi.Pointer<__darwin_pthread_handler_rec> __cleanup_stack;
-
-  @ffi.Array.multi([8176])
-  external ffi.Array<ffi.Char> __opaque;
-}
-
-final class _GoString_ extends ffi.Struct {
-  external ffi.Pointer<ffi.Char> p;
-
-  @ptrdiff_t()
-  external int n;
-}
-
-typedef ptrdiff_t = __darwin_ptrdiff_t;
-typedef __darwin_ptrdiff_t = ffi.Long;
-typedef Dart__darwin_ptrdiff_t = int;
+final class _GoString_ extends ffi.Opaque {}
 
 final class RSResult extends ffi.Struct {
   external ffi.Pointer<ffi.Char> errMsg;
@@ -230,77 +92,8 @@ final class GoSlice extends ffi.Struct {
 typedef GoInt = GoInt64;
 typedef GoInt64 = ffi.LongLong;
 typedef DartGoInt64 = int;
-typedef GoString = _GoString_;
-
-const int __DARWIN_ONLY_64_BIT_INO_T = 0;
-
-const int __DARWIN_ONLY_UNIX_CONFORMANCE = 1;
-
-const int __DARWIN_ONLY_VERS_1050 = 0;
-
-const int __DARWIN_UNIX03 = 1;
-
-const int __DARWIN_64_BIT_INO_T = 1;
-
-const int __DARWIN_VERS_1050 = 1;
-
-const int __DARWIN_NON_CANCELABLE = 0;
-
-const String __DARWIN_SUF_64_BIT_INO_T = '\$INODE64';
-
-const String __DARWIN_SUF_1050 = '\$1050';
-
-const String __DARWIN_SUF_EXTSN = '\$DARWIN_EXTSN';
-
-const int __DARWIN_C_ANSI = 4096;
-
-const int __DARWIN_C_FULL = 900000;
-
-const int __DARWIN_C_LEVEL = 900000;
-
-const int __STDC_WANT_LIB_EXT1__ = 1;
-
-const int __DARWIN_NO_LONG_LONG = 0;
-
-const int _DARWIN_FEATURE_64_BIT_INODE = 1;
-
-const int _DARWIN_FEATURE_ONLY_UNIX_CONFORMANCE = 1;
-
-const int _DARWIN_FEATURE_UNIX_CONFORMANCE = 3;
-
-const int __has_ptrcheck = 0;
-
-const int __DARWIN_NULL = 0;
-
-const int __PTHREAD_SIZE__ = 8176;
-
-const int __PTHREAD_ATTR_SIZE__ = 56;
-
-const int __PTHREAD_MUTEXATTR_SIZE__ = 8;
-
-const int __PTHREAD_MUTEX_SIZE__ = 56;
-
-const int __PTHREAD_CONDATTR_SIZE__ = 8;
-
-const int __PTHREAD_COND_SIZE__ = 40;
-
-const int __PTHREAD_ONCE_SIZE__ = 8;
-
-const int __PTHREAD_RWLOCK_SIZE__ = 192;
-
-const int __PTHREAD_RWLOCKATTR_SIZE__ = 16;
-
-const int __DARWIN_WCHAR_MAX = 2147483647;
-
-const int __DARWIN_WCHAR_MIN = -2147483648;
-
-const int __DARWIN_WEOF = -1;
-
-const int _FORTIFY_SOURCE = 2;
 
 const int NULL = 0;
-
-const int USER_ADDR_NULL = 0;
 
 const int TRUE = 1;
 

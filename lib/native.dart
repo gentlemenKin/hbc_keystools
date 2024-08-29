@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:ffi'; // For FFI
 import 'dart:io'; // For Platform
+import 'dart:isolate';
 import 'package:ffi/ffi.dart'; // For using Utf8 from ffi
 import 'package:flutter/cupertino.dart';
 import 'package:path/path.dart' as path;
@@ -72,6 +73,47 @@ typedef GetRecoveryDart = RSResult Function(
   GoString str5,
 );
 
+typedef GoTransferC = RSResult Function(
+  GoString name,
+  GoString str,
+  GoString str1,
+  GoString str2,
+  GoString str3,
+  GoString str4,
+  GoString str5,
+);
+
+typedef GoTransferDart = RSResult Function(
+  GoString name,
+  GoString str,
+  GoString str1,
+  GoString str2,
+  GoString str3,
+  GoString str4,
+  GoString str5,
+);
+
+typedef GoSingC = RSResult Function(
+    GoString name,
+    GoString str,
+    GoString str1,
+    GoString str2,
+    GoString str3,
+    GoString str4,
+    GoString str5,
+    );
+
+typedef GoSignDart = RSResult Function(
+    GoString name,
+    GoString str,
+    GoString str1,
+    GoString str2,
+    GoString str3,
+    GoString str4,
+    GoString str5,
+    );
+
+
 class NativeLib {
   // Load the dynamic library
   // var libraryPath = path.join(Directory.current.path, 'recovery_tool.dylib');
@@ -115,6 +157,29 @@ class NativeLib {
     } else {
       return null;
     }
+  }
+
+  Future<GetRecoveryDart?> getTransferFun() async {
+    final _dylib = await getLib();
+
+    if (_dylib != null) {
+      return _dylib.lookupFunction<GoTransferC, GoTransferDart>('GoTransfer');
+    } else {
+      return null;
+    }
+
+  }
+
+  Future<GetRecoveryDart?> getSignFun() async {
+    final _dylib = await getLib();
+
+    debugPrint('当前的cpu ----${_dylib.toString()}');
+    if (_dylib != null) {
+      return _dylib.lookupFunction<GoSingC, GoSignDart>('GoSign');
+    } else {
+      return null;
+    }
+
   }
 
   Future<GoString?> getChainList() async {
@@ -273,4 +338,194 @@ class NativeLib {
     malloc.free(goString6);
     return result;
   }
+
+
+  Future<RSResult?> GoTransfer(
+      String name,
+      String str,
+      String str1,
+      String str2,
+      String str3,
+      String string4,
+      String str5,
+      ) async {
+    final namePtr = name.toNativeUtf8();
+    final goString = malloc<GoString>();
+    goString.ref
+      ..p = namePtr
+      ..n = name.length;
+
+    final params1 = str.toNativeUtf8();
+    final goString1 = malloc<GoString>();
+    goString1.ref
+      ..p = params1
+      ..n = params1.length;
+
+    final params2 = str1.toNativeUtf8();
+    final goString2 = malloc<GoString>();
+    goString2.ref
+      ..p = params2
+      ..n = params2.length;
+
+    final params3 = str2.toNativeUtf8();
+    final goString3 = malloc<GoString>();
+    goString3.ref
+      ..p = params3
+      ..n = params3.length;
+
+    final params4 = str3.toNativeUtf8();
+    final goString4 = malloc<GoString>();
+    goString4.ref
+      ..p = params4
+      ..n = params4.length;
+
+    final params5 = string4.toNativeUtf8();
+    final goString5 = malloc<GoString>();
+    goString5.ref
+      ..p = params5
+      ..n = params5.length;
+
+    final params6 = str5.toNativeUtf8();
+    final goString6 = malloc<GoString>();
+    goString6.ref
+      ..p = params6
+      ..n = params6.length;
+
+    final fun = await getTransferFun();
+    RSResult? result;
+    if (fun != null) {
+      result = fun!(
+        goString.ref,
+        goString1.ref,
+        goString2.ref,
+        goString3.ref,
+        goString4.ref,
+        goString5.ref,
+        goString6.ref,
+      );
+    } else {
+      result = null;
+    }
+
+    // final resultStr = result.p.toDartString();
+
+    // Free the allocated memory
+    malloc.free(namePtr);
+    malloc.free(goString);
+
+    malloc.free(params1);
+    malloc.free(goString1);
+
+    malloc.free(params2);
+    malloc.free(goString2);
+
+    malloc.free(params3);
+    malloc.free(goString3);
+
+    malloc.free(params4);
+    malloc.free(goString4);
+
+    malloc.free(params5);
+    malloc.free(goString5);
+
+    malloc.free(params6);
+    malloc.free(goString6);
+    return result;
+  }
+
+  Future<RSResult?> GoSign(
+      // SendPort sendPort,
+      String name,
+      String str,
+      String str1,
+      String str2,
+      String str3,
+      String string4,
+      String str5,
+      ) async {
+    final namePtr = name.toNativeUtf8();
+    final goString = malloc<GoString>();
+    goString.ref
+      ..p = namePtr
+      ..n = name.length;
+
+    final params1 = str.toNativeUtf8();
+    final goString1 = malloc<GoString>();
+    goString1.ref
+      ..p = params1
+      ..n = params1.length;
+
+    final params2 = str1.toNativeUtf8();
+    final goString2 = malloc<GoString>();
+    goString2.ref
+      ..p = params2
+      ..n = params2.length;
+
+    final params3 = str2.toNativeUtf8();
+    final goString3 = malloc<GoString>();
+    goString3.ref
+      ..p = params3
+      ..n = params3.length;
+
+    final params4 = str3.toNativeUtf8();
+    final goString4 = malloc<GoString>();
+    goString4.ref
+      ..p = params4
+      ..n = params4.length;
+
+    final params5 = string4.toNativeUtf8();
+    final goString5 = malloc<GoString>();
+    goString5.ref
+      ..p = params5
+      ..n = params5.length;
+
+    final params6 = str5.toNativeUtf8();
+    final goString6 = malloc<GoString>();
+    goString6.ref
+      ..p = params6
+      ..n = params6.length;
+    // SendPort resultPort = sendPort;
+    final fun = await getSignFun();
+    RSResult? result;
+    if (fun != null) {
+      result = fun!(
+        goString.ref,
+        goString1.ref,
+        goString2.ref,
+        goString3.ref,
+        goString4.ref,
+        goString5.ref,
+        goString6.ref,
+      );
+    } else {
+      result = null;
+    }
+
+    // final resultStr = result.p.toDartString();
+
+    // Free the allocated memory
+    malloc.free(namePtr);
+    malloc.free(goString);
+
+    malloc.free(params1);
+    malloc.free(goString1);
+
+    malloc.free(params2);
+    malloc.free(goString2);
+
+    malloc.free(params3);
+    malloc.free(goString3);
+
+    malloc.free(params4);
+    malloc.free(goString4);
+
+    malloc.free(params5);
+    malloc.free(goString5);
+
+    malloc.free(params6);
+    malloc.free(goString6);
+    // Isolate.exit(sendPort,result);
+    return result;
+  }
+
 }

@@ -1,12 +1,16 @@
 import 'dart:async';
+import 'dart:isolate';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:ffi/ffi.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:hbc_keystools/local/color_constant.dart';
+import 'package:hbc_keystools/native.dart';
 import 'package:hbc_keystools/widget/common_btn.dart';
 import 'package:hbc_keystools/widget/dialog_widget.dart';
 import 'package:hbc_keystools/widget/ensure_dialog.dart';
@@ -15,8 +19,9 @@ import 'package:hbc_keystools/widget/input_row_select_widget.dart';
 import 'package:hbc_keystools/widget/input_row_widget.dart';
 import 'package:hbc_keystools/widget/select_coin_dialog.dart';
 import 'package:hbc_keystools/widget/select_single_dialog.dart';
+import 'package:hex/hex.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'manager/lan_manager.dart';
 
 class TransferPage extends StatefulWidget {
@@ -38,16 +43,16 @@ class _TransferPageState extends State<TransferPage> {
   final List<String> scan = ['https://solscan.io', 'https://aptoscan.com', 'https://polkadot.subscan.io'];
   final List<String> coins = ['Sol', 'Apt', 'Dot'];
 
-  final List<SponsorBean> sloCoins = [
+  List<SponsorBean> sloCoins = [
     SponsorBean(true, 'Sol', '1'),
     SponsorBean(false, 'USDT_Solana', '2'),
     SponsorBean(false, '自定义', '3'),
   ];
-  final List<SponsorBean> aptCoins = [
+  List<SponsorBean> aptCoins = [
     SponsorBean(true, 'APT', '2'),
     SponsorBean(false, '自定义', '3'),
   ];
-  final List<SponsorBean> dotCoins = [
+  List<SponsorBean> dotCoins = [
     SponsorBean(true, 'DOT', '2'),
     SponsorBean(false, '自定义', '3'),
   ];
@@ -62,9 +67,11 @@ class _TransferPageState extends State<TransferPage> {
   TextEditingController _transferToController = TextEditingController();
   TextEditingController _transferRpcController = TextEditingController();
   TextEditingController _transferAddressController = TextEditingController();
+  bool showError4 = false;
   bool showError5 = false;
   bool showError6 = false;
   bool showError7 = false;
+  bool showError8 = false;
   String path = '';
   GlobalKey amountKey = GlobalKey();
   GlobalKey rpcKey = GlobalKey();
@@ -121,6 +128,21 @@ class _TransferPageState extends State<TransferPage> {
                     chains: chains,
                     callback: (int data) {
                       debugPrint('当前的data：$data');
+                      if (chooseChainName != chains[data].userName) {
+                        sloCoins = [
+                          SponsorBean(true, 'Sol', '1'),
+                          SponsorBean(false, 'USDT_Solana', '2'),
+                          SponsorBean(false, '自定义', '3'),
+                        ];
+                        dotCoins = [
+                          SponsorBean(true, 'DOT', '2'),
+                          SponsorBean(false, '自定义', '3'),
+                        ];
+                        aptCoins = [
+                          SponsorBean(true, 'APT', '2'),
+                          SponsorBean(false, '自定义', '3'),
+                        ];
+                      }
                       chooseChainName = chains[data].userName;
                       defaultNode = node[data];
                       defaultScan = scan[data];
@@ -229,7 +251,7 @@ class _TransferPageState extends State<TransferPage> {
               controller: _transferAddressController,
               hint: 'Input'.tr,
               showParse: true,
-              showError: showError6,
+              showError: showError4,
               errorMsg: 'InputEcies'.tr,
             ),
           if (customize)
@@ -239,6 +261,7 @@ class _TransferPageState extends State<TransferPage> {
           InputInfoRowWidget(
             title: '转出数量',
             controller: _transferAmountController,
+            formatter: FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
             hint: 'Input'.tr,
             showParse: true,
             showError: showError5,
@@ -276,7 +299,7 @@ class _TransferPageState extends State<TransferPage> {
             controller: _transferRpcController,
             hint: 'Input'.tr,
             showParse: true,
-            showError: showError7,
+            showError: showError8,
             errorMsg: 'InputEcies'.tr,
             globalKey: rpcKey,
             content: '可自定义RPC节点',
@@ -291,16 +314,85 @@ class _TransferPageState extends State<TransferPage> {
                 Flexible(
                     child: CommonButtonWidget(
                   callback: () async {
-                    final res = await _isConnected();
-                    debugPrint('当前的结果：res:$res');
-                    if (!res) {
-                      Get.dialog(DialogWidget(
-                        child: EnsureDialog(),
-                        width: 440,
-                        height: 300,
-                      ));
+                    bool keyRight = false;
+                    try {
+                      final res = HEX.decode(_transferFromController.text.toString());
+                      debugPrint('keyRight:$res');
+                      if (res.isNotEmpty) {
+                        keyRight = true;
+                      }
+                    } catch (e) {
+                      keyRight = false;
+                    }
+                    debugPrint('keyRight:$keyRight');
+                    if (_transferRpcController.text.toString().isNotEmpty &&
+                        _transferFromController.text.toString().isNotEmpty &&
+                        _transferToController.text.toString().isNotEmpty &&
+                        _transferAmountController.text.toString().isNotEmpty &&
+                        keyRight) {
+                      final res = await _isConnected();
+                      if (!res) {
+                        String coinAddress = '';
+                        if (customize) {
+                          coinAddress = _transferAddressController.text.toString();
+                        } else {
+                          if (defaultCoin == 'USDT_Solana') {
+                            coinAddress = 'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB';
+                          }
+                        }
+
+                        debugPrint('第一个参数：${chooseChainName}');
+                        debugPrint('第2个参数：${_transferRpcController.text.toString()}');
+                        debugPrint('第3个参数：${_transferFromController.text.toString()}');
+                        debugPrint('第4个参数：${_transferToController.text.toString()}');
+                        debugPrint('第5个参数：${_transferAmountController.text.toString()}');
+                        debugPrint('第6个参数：${coinAddress}');
+                        debugPrint('第7个参数：${LanStream().currentLan}');
+
+                        ///判断输入是否符合标准
+                        EasyLoading.showInfo('loading'.tr, duration: const Duration(milliseconds: 2000));
+                        Future.delayed(const Duration(milliseconds: 500)).then((value) async {
+                          final res = await NativeLib().GoTransfer(chooseChainName, _transferRpcController.text.toString(), _transferFromController.text.toString(),
+                              _transferToController.text.toString(), _transferAmountController.text.toString(), coinAddress, LanStream().currentLan);
+                          debugPrint('当前的结果：res:$res');
+                          if (res != null) {
+                            if (res.ok == 1) {
+                              debugPrint('${res.data.toDartString()}');
+                              EasyLoading.dismiss();
+                              Get.dialog(DialogWidget(
+                                child: EnsureDialog(
+                                  myUrl: defaultScan,
+                                ),
+                                width: 440,
+                                height: 300,
+                              ));
+                            } else {
+                              EasyLoading.showToast(res.errMsg.toDartString());
+                            }
+                          }
+                        });
+                      } else {
+                        EasyLoading.showToast('当前未链接网络');
+                      }
                     } else {
-                      EasyLoading.showToast('当前未链接网络');
+                      if (_transferRpcController.text.toString().isEmpty) {
+                        showError8 = true;
+                      }
+                      if (_transferFromController.text.toString().isEmpty || !keyRight) {
+                        showError6 = true;
+                      } else {
+                        showError6 = false;
+                      }
+                      if (_transferToController.text.toString().isEmpty) {
+                        showError7 = true;
+                      }
+                      if (_transferAmountController.text.toString().isEmpty) {
+                        showError5 = true;
+                      }
+                      if (_transferAddressController.text.toString().isEmpty) {
+                        showError4 = true;
+                      }
+                      setState(() {});
                     }
                   },
                   string: '确认转出',
@@ -308,13 +400,6 @@ class _TransferPageState extends State<TransferPage> {
                 SizedBox(
                   width: 24,
                 ),
-                Flexible(
-                    child: CommonButtonWidget(
-                  callback: () {
-                    debugPrint('当前的语言：${LanStream().currentLan}');
-                  },
-                  string: '离线签名',
-                )),
               ],
             ),
           ),
@@ -351,5 +436,39 @@ class _TransferPageState extends State<TransferPage> {
         ],
       ),
     );
+  }
+
+  Future<void> isolateSign(List<dynamic> args) async {
+    SendPort resultPort = args[0];
+    String name = args[1];
+    String str = args[2];
+    String str1 = args[3];
+    String str2 = args[4];
+    String str3 = args[5];
+    String str4 = args[6];
+    String str5 = args[7];
+    final res = NativeLib().GoSign(name, str, str1, str2, str3, str4, str5);
+    Isolate.exit(resultPort, res);
+  }
+
+  Future<void> readAndParseJson(List<dynamic> args) async {
+    SendPort resultPort = args[0];
+    String fileLink = args[1];
+
+    print('获取下载链接: $fileLink');
+
+    String fileContent = '文件内容';
+    await Future.delayed(const Duration(seconds: 2));
+    Isolate.exit(resultPort, fileContent);
+  }
+
+  Future<void> _isolateMain(RootIsolateToken rootIsolateToken) async {
+    // Register the background isolate with the root isolate.
+    BackgroundIsolateBinaryMessenger.ensureInitialized(rootIsolateToken);
+
+    // You can now use the shared_preferences plugin.
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+    print(sharedPreferences.getBool('isDebug'));
   }
 }

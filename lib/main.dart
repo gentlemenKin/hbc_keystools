@@ -46,8 +46,8 @@ void main() async {
   windowManager.waitUntilReadyToShow(
        WindowOptions(
         // size: Platform.isMacOS?Size(1280, 800):Size(800, 600),
-         size: Size(1280, 800),
-        minimumSize: Size(800, 600),
+         size: Size(1380, 800),
+        minimumSize: Size(1380, 800),
         center: true,
         title: 'KeyRecovery',
         backgroundColor: Colors.transparent,
