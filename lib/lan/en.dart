@@ -45,7 +45,7 @@ const Map<String,String> en_US = {
   "TransferWaring":'Currently, the EdDSA private keys exported by Solana, Aptos, and Polkadot do not support wallet import. If you need to transfer money, you can use the EdDSA transfer tool through the restored private key.',
   "TransferWaring2":'Please check the tokens and gess fee when transferring out to avoid failure.',
   "ToAddress":'To (address)',
-  "FromKey":'From (private key)）',
+  "FromKey":'From (private key)',
   "TransferAmount":'Amount',
   "CustomRPC":'Customizable RPC nodes',
   "EnsureTransfer":'Confirm to transfer out',

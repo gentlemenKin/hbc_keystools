@@ -102,7 +102,7 @@ class _TransferPageState extends State<TransferPage> {
     _transferRpcController.text = defaultNode;
     _transferAmountController.addListener(() {
       if (_transferAmountController.text.trim().isEmpty) {
-        showError5 = true;
+        // showError5 = true;
       } else {
         showError5 = false;
       }
@@ -110,13 +110,13 @@ class _TransferPageState extends State<TransferPage> {
     });
     _transferFromController.addListener(() {
       if (_transferFromController.text.trim().isEmpty) {
-        showError6 = true;
+        // showError6 = true;
       } else {
         try {
           final res = HEX.decode(_transferFromController.text.toString());
           debugPrint('keyRight:$res');
           if (res.isNotEmpty) {
-            showError6 = true;
+            showError6 = false;
           }
         } catch (e) {
           showError6 = false;
@@ -126,7 +126,7 @@ class _TransferPageState extends State<TransferPage> {
     });
     _transferToController.addListener(() {
       if (_transferToController.text.trim().isEmpty) {
-        showError7 = true;
+        // showError7 = true;
       } else {
         showError7 = false;
       }
@@ -134,7 +134,7 @@ class _TransferPageState extends State<TransferPage> {
     });
     _transferRpcController.addListener(() {
       if (_transferRpcController.text.trim().isEmpty) {
-        showError8 = true;
+        // showError8 = true;
       } else {
         showError8 = false;
       }
@@ -143,7 +143,7 @@ class _TransferPageState extends State<TransferPage> {
     _transferAddressController.addListener(() {
       if (customize) {
         if (_transferAddressController.text.trim().isEmpty) {
-          showError4 = true;
+          // showError4 = true;
         } else {
           showError4 = false;
         }
@@ -402,9 +402,7 @@ class _TransferPageState extends State<TransferPage> {
                         debugPrint('第7个参数：${LanStream().currentLan}');
 
                         ///判断输入是否符合标准
-                        EasyLoading.showInfo(
-                          'loading'.tr,
-                        );
+                        EasyLoading.show();
                         final res = await compute(NativeLib().GoTransfer, {
                           'name': chooseChainName,
                           'str': _transferRpcController.text.trim().toString(),
@@ -435,7 +433,7 @@ class _TransferPageState extends State<TransferPage> {
                                 msg: res.errMsg.toDartString(),
                               ),
                               width: 440,
-                              height: 300,
+                              height: 330,
                             ));
                             // EasyLoading.showToast(res.errMsg.toDartString());
                           }
