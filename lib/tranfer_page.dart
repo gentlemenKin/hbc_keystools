@@ -4,6 +4,7 @@ import 'dart:isolate';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:ffi/ffi.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -14,6 +15,7 @@ import 'package:hbc_keystools/native.dart';
 import 'package:hbc_keystools/widget/common_btn.dart';
 import 'package:hbc_keystools/widget/dialog_widget.dart';
 import 'package:hbc_keystools/widget/ensure_dialog.dart';
+import 'package:hbc_keystools/widget/fail_dialog.dart';
 import 'package:hbc_keystools/widget/input_info_row_widget.dart';
 import 'package:hbc_keystools/widget/input_row_select_widget.dart';
 import 'package:hbc_keystools/widget/input_row_widget.dart';
@@ -46,15 +48,15 @@ class _TransferPageState extends State<TransferPage> {
   List<SponsorBean> sloCoins = [
     SponsorBean(true, 'Sol', '1'),
     SponsorBean(false, 'USDT_Solana', '2'),
-    SponsorBean(false, '自定义', '3'),
+    SponsorBean(false, 'CustomCoin'.tr, '3'),
   ];
   List<SponsorBean> aptCoins = [
     SponsorBean(true, 'APT', '2'),
-    SponsorBean(false, '自定义', '3'),
+    SponsorBean(false, 'CustomCoin'.tr, '3'),
   ];
   List<SponsorBean> dotCoins = [
     SponsorBean(true, 'DOT', '2'),
-    SponsorBean(false, '自定义', '3'),
+    SponsorBean(false, 'CustomCoin'.tr, '3'),
   ];
 
   List<SponsorBean> defaultCoins = [];
@@ -98,6 +100,56 @@ class _TransferPageState extends State<TransferPage> {
     // });
     defaultCoins = sloCoins;
     _transferRpcController.text = defaultNode;
+    _transferAmountController.addListener(() {
+      if (_transferAmountController.text.trim().isEmpty) {
+        showError5 = true;
+      } else {
+        showError5 = false;
+      }
+      setState(() {});
+    });
+    _transferFromController.addListener(() {
+      if (_transferFromController.text.trim().isEmpty) {
+        showError6 = true;
+      } else {
+        try {
+          final res = HEX.decode(_transferFromController.text.toString());
+          debugPrint('keyRight:$res');
+          if (res.isNotEmpty) {
+            showError6 = true;
+          }
+        } catch (e) {
+          showError6 = false;
+        }
+      }
+      setState(() {});
+    });
+    _transferToController.addListener(() {
+      if (_transferToController.text.trim().isEmpty) {
+        showError7 = true;
+      } else {
+        showError7 = false;
+      }
+      setState(() {});
+    });
+    _transferRpcController.addListener(() {
+      if (_transferRpcController.text.trim().isEmpty) {
+        showError8 = true;
+      } else {
+        showError8 = false;
+      }
+      setState(() {});
+    });
+    _transferAddressController.addListener(() {
+      if (customize) {
+        if (_transferAddressController.text.trim().isEmpty) {
+          showError4 = true;
+        } else {
+          showError4 = false;
+        }
+      }
+      setState(() {});
+    });
   }
 
   Future<bool> _isConnected() async {
@@ -132,15 +184,15 @@ class _TransferPageState extends State<TransferPage> {
                         sloCoins = [
                           SponsorBean(true, 'Sol', '1'),
                           SponsorBean(false, 'USDT_Solana', '2'),
-                          SponsorBean(false, '自定义', '3'),
+                          SponsorBean(false, 'CustomCoin'.tr, '3'),
                         ];
                         dotCoins = [
                           SponsorBean(true, 'DOT', '2'),
-                          SponsorBean(false, '自定义', '3'),
+                          SponsorBean(false, 'CustomCoin'.tr, '3'),
                         ];
                         aptCoins = [
                           SponsorBean(true, 'APT', '2'),
-                          SponsorBean(false, '自定义', '3'),
+                          SponsorBean(false, 'CustomCoin'.tr, '3'),
                         ];
                       }
                       chooseChainName = chains[data].userName;
@@ -181,7 +233,7 @@ class _TransferPageState extends State<TransferPage> {
               Container(
                 width: 150,
                 child: Text(
-                  '查询余额',
+                  'CheckBalance'.tr,
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: ColorConstant.color_0x000000),
                 ),
               ),
@@ -198,7 +250,7 @@ class _TransferPageState extends State<TransferPage> {
                     }
                   },
                   child: Text(
-                    '从CipherBC应用复制地址后前往区块浏览器查询》',
+                    'BlockExplorer'.tr,
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: ColorConstant.themeColor),
                   ),
                 ),
@@ -209,7 +261,7 @@ class _TransferPageState extends State<TransferPage> {
             height: 30,
           ),
           InputRowSelectWidget(
-            title: '转出币种',
+            title: 'TransferCurrency'.tr,
             hint: 'ChooseChain'.tr,
             content: defaultCoin,
             callback: () {
@@ -249,47 +301,47 @@ class _TransferPageState extends State<TransferPage> {
             InputRowWidget(
               title: '',
               controller: _transferAddressController,
-              hint: 'Input'.tr,
+              hint: 'HintContract'.tr,
               showParse: true,
               showError: showError4,
-              errorMsg: 'InputEcies'.tr,
+              errorMsg: 'RightContract'.tr,
             ),
           if (customize)
             SizedBox(
               height: 30,
             ),
           InputInfoRowWidget(
-            title: '转出数量',
+            title: 'TransferAmount'.tr,
             controller: _transferAmountController,
             formatter: FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
-            hint: 'Input'.tr,
+            hint: 'HintAmount'.tr,
             showParse: true,
             showError: showError5,
-            errorMsg: 'InputEcies'.tr,
+            errorMsg: 'RightAmount'.tr,
             globalKey: amountKey,
-            content: '转出时请检查下余额，确保转出代币和GAS充足，避免因代币或GAS不足导致的失败',
+            content: 'TransferWaring2'.tr,
           ),
           SizedBox(
             height: 30,
           ),
           InputRowWidget(
-            title: 'From(私钥)',
+            title: 'FromKey'.tr,
             controller: _transferFromController,
-            hint: 'Input'.tr,
+            hint: 'HintKey'.tr,
             showParse: true,
             showError: showError6,
-            errorMsg: 'InputEcies'.tr,
+            errorMsg: 'RightKey'.tr,
           ),
           SizedBox(
             height: 30,
           ),
           InputRowWidget(
-            title: 'To(地址)',
+            title: 'ToAddress'.tr,
             controller: _transferToController,
-            hint: 'Input'.tr,
+            hint: 'HintAddress'.tr,
             showParse: true,
             showError: showError7,
-            errorMsg: 'InputEcies'.tr,
+            errorMsg: 'RightAddress'.tr,
           ),
           SizedBox(
             height: 30,
@@ -297,12 +349,12 @@ class _TransferPageState extends State<TransferPage> {
           InputInfoRowWidget(
             title: 'RPC',
             controller: _transferRpcController,
-            hint: 'Input'.tr,
+            hint: 'HintRPC'.tr,
             showParse: true,
             showError: showError8,
-            errorMsg: 'InputEcies'.tr,
+            errorMsg: 'HintRPC'.tr,
             globalKey: rpcKey,
-            content: '可自定义RPC节点',
+            content: 'CustomRPC'.tr,
           ),
           SizedBox(
             height: 50,
@@ -350,29 +402,48 @@ class _TransferPageState extends State<TransferPage> {
                         debugPrint('第7个参数：${LanStream().currentLan}');
 
                         ///判断输入是否符合标准
-                        EasyLoading.showInfo('loading'.tr, duration: const Duration(milliseconds: 2000));
-                        Future.delayed(const Duration(milliseconds: 500)).then((value) async {
-                          final res = await NativeLib().GoTransfer(chooseChainName, _transferRpcController.text.toString(), _transferFromController.text.toString(),
-                              _transferToController.text.toString(), _transferAmountController.text.toString(), coinAddress, LanStream().currentLan);
-                          debugPrint('当前的结果：res:$res');
-                          if (res != null) {
-                            if (res.ok == 1) {
-                              debugPrint('${res.data.toDartString()}');
-                              EasyLoading.dismiss();
-                              Get.dialog(DialogWidget(
-                                child: EnsureDialog(
-                                  myUrl: defaultScan,
-                                ),
-                                width: 440,
-                                height: 300,
-                              ));
-                            } else {
-                              EasyLoading.showToast(res.errMsg.toDartString());
-                            }
-                          }
+                        EasyLoading.showInfo(
+                          'loading'.tr,
+                        );
+                        final res = await compute(NativeLib().GoTransfer, {
+                          'name': chooseChainName,
+                          'str': _transferRpcController.text.trim().toString(),
+                          'str1': _transferFromController.text.trim().toString(),
+                          'str2': _transferToController.text.trim().toString(),
+                          'str3': _transferAmountController.text.trim().toString(),
+                          'string4': coinAddress,
+                          'str5': LanStream().currentLan,
                         });
+                        // final res = await NativeLib().GoTransfer(chooseChainName, _transferRpcController.text.toString(), _transferFromController.text.toString(),
+                        //     _transferToController.text.toString(), _transferAmountController.text.toString(), coinAddress, LanStream().currentLan);
+                        debugPrint('当前的结果：res:$res');
+                        if (res != null) {
+                          EasyLoading.dismiss();
+                          if (res.ok == 1) {
+                            debugPrint('${res.data.toDartString()}');
+                            EasyLoading.dismiss();
+                            Get.dialog(DialogWidget(
+                              child: EnsureDialog(
+                                myUrl: defaultScan,
+                              ),
+                              width: 440,
+                              height: 300,
+                            ));
+                          } else {
+                            Get.dialog(DialogWidget(
+                              child: FailDialog(
+                                msg: res.errMsg.toDartString(),
+                              ),
+                              width: 440,
+                              height: 300,
+                            ));
+                            // EasyLoading.showToast(res.errMsg.toDartString());
+                          }
+                        } else {
+                          EasyLoading.dismiss();
+                        }
                       } else {
-                        EasyLoading.showToast('当前未链接网络');
+                        EasyLoading.showToast('noNet'.tr);
                       }
                     } else {
                       if (_transferRpcController.text.toString().isEmpty) {
@@ -395,7 +466,7 @@ class _TransferPageState extends State<TransferPage> {
                       setState(() {});
                     }
                   },
-                  string: '确认转出',
+                  string: 'EnsureTransfer'.tr,
                 )),
                 SizedBox(
                   width: 24,
@@ -407,7 +478,7 @@ class _TransferPageState extends State<TransferPage> {
             height: 50,
           ),
           Text(
-            '注意，转出说明：',
+            'TransferDeclaration'.tr,
             style: TextStyle(
               color: ColorConstant.color_0x000000,
               fontSize: 14,
@@ -415,7 +486,7 @@ class _TransferPageState extends State<TransferPage> {
             ),
           ),
           Text(
-            '1.确认转出，表示您同意客户端联网进行链上广播交易的联网操作.',
+            'Declaration1'.tr,
             style: TextStyle(
               color: ColorConstant.color_0x000000,
               fontSize: 14,
@@ -423,7 +494,7 @@ class _TransferPageState extends State<TransferPage> {
             ),
           ),
           Text(
-            '2.离线签名，客户端将生成一段已签名的消息码，您需复制消息码并委托第三方进行上链广播交易.',
+            'Declaration2'.tr,
             style: TextStyle(
               color: ColorConstant.color_0x000000,
               fontSize: 14,
@@ -436,39 +507,5 @@ class _TransferPageState extends State<TransferPage> {
         ],
       ),
     );
-  }
-
-  Future<void> isolateSign(List<dynamic> args) async {
-    SendPort resultPort = args[0];
-    String name = args[1];
-    String str = args[2];
-    String str1 = args[3];
-    String str2 = args[4];
-    String str3 = args[5];
-    String str4 = args[6];
-    String str5 = args[7];
-    final res = NativeLib().GoSign(name, str, str1, str2, str3, str4, str5);
-    Isolate.exit(resultPort, res);
-  }
-
-  Future<void> readAndParseJson(List<dynamic> args) async {
-    SendPort resultPort = args[0];
-    String fileLink = args[1];
-
-    print('获取下载链接: $fileLink');
-
-    String fileContent = '文件内容';
-    await Future.delayed(const Duration(seconds: 2));
-    Isolate.exit(resultPort, fileContent);
-  }
-
-  Future<void> _isolateMain(RootIsolateToken rootIsolateToken) async {
-    // Register the background isolate with the root isolate.
-    BackgroundIsolateBinaryMessenger.ensureInitialized(rootIsolateToken);
-
-    // You can now use the shared_preferences plugin.
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-
-    print(sharedPreferences.getBool('isDebug'));
   }
 }

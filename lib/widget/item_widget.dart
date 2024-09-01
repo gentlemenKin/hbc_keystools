@@ -4,6 +4,7 @@ import 'package:hbc_keystools/local/constant.dart';
 import 'package:hbc_keystools/widget/select_coin_dialog.dart';
 
 import '../local/color_constant.dart';
+
 typedef IsItemSelect = Function(int index);
 
 class ItemWidget extends StatefulWidget {
@@ -13,9 +14,10 @@ class ItemWidget extends StatefulWidget {
     required this.callback,
     required this.index,
   }) : super(key: key);
-  final  SponsorBean title;
+  final SponsorBean title;
   final IsItemSelect callback;
   final int index;
+
   @override
   State<ItemWidget> createState() => _ItemWidgetState();
 }
@@ -34,7 +36,7 @@ class _ItemWidgetState extends State<ItemWidget> with AutomaticKeepAliveClientMi
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
-        onTap: (){
+        onTap: () {
           widget.callback(widget.index);
         },
         child: Container(
@@ -48,16 +50,24 @@ class _ItemWidgetState extends State<ItemWidget> with AutomaticKeepAliveClientMi
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(widget.title.userName,style: TextStyle(
-                fontSize: 14,
-                color: ColorConstant.color_0x000000,
-                fontWeight: FontWeight.w500,
-              ),),
-              if(widget.title.isSlected)
-              Padding(
-                padding: EdgeInsets.only(right: 10),
-                child: Image.asset(AssetsConstant.select,width: 20,height: 20,),
+              Text(
+                widget.title.userName,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: ColorConstant.color_0x000000,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
+              if (widget.title.isSlected)
+                Padding(
+                  padding: EdgeInsets.only(right: 10),
+                  child: Image.asset(
+                    AssetsConstant.select,
+                    width: 20,
+                    height: 20,
+                    color: ColorConstant.themeColor,
+                  ),
+                ),
             ],
           ),
         ),

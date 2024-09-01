@@ -6,6 +6,7 @@ import 'package:desktop_drop/desktop_drop.dart';
 import 'package:excel/excel.dart';
 import 'package:ffi/ffi.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -39,7 +40,6 @@ class RecoveryPage extends StatefulWidget {
 }
 
 class _RecoveryPageState extends State<RecoveryPage> {
-
   TextEditingController metaController = TextEditingController(); //大于0的数字
   TextEditingController eciesController = TextEditingController();
   TextEditingController ricController = TextEditingController();
@@ -101,6 +101,7 @@ class _RecoveryPageState extends State<RecoveryPage> {
   bool showError4 = false;
   bool showError5 = false;
   bool showError6 = false;
+
   // String currentLan = 'en';
   // late StreamSubscription<String> lanStreamSubscription;
   void clickBtn(String zipPath, String userMnemonic, String eciesPrivKey, String rsaPrivKey, String vaultCount, String coinTypes) {
@@ -154,12 +155,11 @@ class _RecoveryPageState extends State<RecoveryPage> {
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
         child: Padding(
-          padding: const EdgeInsets.symmetric( vertical: 20),
+          padding: const EdgeInsets.symmetric(vertical: 20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-
               InputRowWidget(
                 title: 'VaultIndex'.tr,
                 controller: metaController,
@@ -220,7 +220,7 @@ class _RecoveryPageState extends State<RecoveryPage> {
                       width: 150,
                       child: Text(
                         'ImportFile'.tr,
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: ColorConstant.color_0x000000 ),
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: ColorConstant.color_0x000000),
                       ),
                     ),
                     SizedBox(
@@ -1041,7 +1041,7 @@ class _RecoveryPageState extends State<RecoveryPage> {
                     width: 150,
                     child: Text(
                       'RSAKey'.tr,
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: ColorConstant.color_0x000000 ),
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: ColorConstant.color_0x000000),
                     ),
                   ),
                   SizedBox(
@@ -1364,31 +1364,46 @@ class _RecoveryPageState extends State<RecoveryPage> {
                           String fStr = rsaAdd + temp;
                           String fstr2 = fStr + rsaAddEnd;
                           try {
-                            Future.delayed(const Duration(milliseconds: 500)).then((value) async {
-                              final res = await NativeLib().printHelloWrapper(
-                                  _list[0].path, helpWord, eciesController.text.trim(), _rsaList[0].path, metaController.text.toString().trim(), chainId, LanStream().currentLan);
-                              if (res != null) {
-                                EasyLoading.dismiss();
-                                // EasyLoading.showToast(res.data.toDartString(), duration: const Duration(seconds: 5));
-                                debugPrint('是否ok：${res.ok}');
-                                debugPrint('是否ok：${res.data.toDartString()}');
-                                if (res.ok == 1) {
-                                  EasyLoading.showToast('RestoredSuccess'.tr);
-                                  debugPrint('${res.data.toDartString()}');
-                                  List resJson = json.decode(res.data.toDartString());
-                                  List<ItemBean> items = resJson.map((e) => ItemBean.fromJson(e)).toList();
-                                  resultList.clear();
-                                  resultList.addAll(items);
-                                  setState(() {});
-                                  // final map = jsonDecode(res.data.toDartString());
-                                } else {
-                                  EasyLoading.showToast(res.errMsg.toDartString());
-                                }
-                              } else {
-                                EasyLoading.dismiss();
-                                EasyLoading.showToast('RestoredFailed'.tr);
-                              }
+                            EasyLoading.show();
+                            final res = await compute(NativeLib().printHelloWrapper,{
+                              'name': _list[0].path,
+                              'str': helpWord,
+                              'str1': eciesController.text.trim(),
+                              'str2': _rsaList[0].path,
+                              'str3': metaController.text.toString().trim(),
+                              'string4': chainId,
+                              'str5': LanStream().currentLan,
                             });
+                            // NativeLib().printHelloWrapper(
+                            //   _list[0].path,
+                            //   helpWord,
+                            //   eciesController.text.trim(),
+                            //   _rsaList[0].path,
+                            //   metaController.text.toString().trim(),
+                            //   chainId,
+                            //   LanStream().currentLan,
+                            // );
+                            if (res != null) {
+                              EasyLoading.dismiss();
+                              // EasyLoading.showToast(res.data.toDartString(), duration: const Duration(seconds: 5));
+                              debugPrint('是否ok：${res.ok}');
+                              debugPrint('是否ok：${res.data.toDartString()}');
+                              if (res.ok == 1) {
+                                EasyLoading.showToast('RestoredSuccess'.tr);
+                                debugPrint('${res.data.toDartString()}');
+                                List resJson = json.decode(res.data.toDartString());
+                                List<ItemBean> items = resJson.map((e) => ItemBean.fromJson(e)).toList();
+                                resultList.clear();
+                                resultList.addAll(items);
+                                setState(() {});
+                                // final map = jsonDecode(res.data.toDartString());
+                              } else {
+                                EasyLoading.showToast(res.errMsg.toDartString());
+                              }
+                            } else {
+                              EasyLoading.dismiss();
+                              EasyLoading.showToast('RestoredFailed'.tr);
+                            }
                           } catch (e) {
                             EasyLoading.showToast("erro:$e");
                           }

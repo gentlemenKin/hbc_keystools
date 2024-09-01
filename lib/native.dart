@@ -247,14 +247,17 @@ class NativeLib {
   // }
   // Create a Dart wrapper for the PrintHello function
   Future<RSResult?> printHelloWrapper(
-    String name,
-    String str,
-    String str1,
-    String str2,
-    String str3,
-    String string4,
-    String str5,
+      Map<String,String> args,
   ) async {
+
+    String name = args['name']??'';
+    String str = args['str']??'';
+    String str1 = args['str1']??'';
+    String str2 = args['str2']??'';
+    String str3 = args['str3']??'';
+    String string4 = args['string4']??'';
+    String str5 = args['str5']??'';
+
     final namePtr = name.toNativeUtf8();
     final goString = malloc<GoString>();
     goString.ref
@@ -341,14 +344,15 @@ class NativeLib {
 
 
   Future<RSResult?> GoTransfer(
-      String name,
-      String str,
-      String str1,
-      String str2,
-      String str3,
-      String string4,
-      String str5,
+      Map<String,String> args,
       ) async {
+    String name = args['name']??'';
+    String str = args['str']??'';
+    String str1 = args['str1']??'';
+    String str2 = args['str2']??'';
+    String str3 = args['str3']??'';
+    String string4 = args['string4']??'';
+    String str5 = args['str5']??'';
     final namePtr = name.toNativeUtf8();
     final goString = malloc<GoString>();
     goString.ref
@@ -435,6 +439,7 @@ class NativeLib {
 
   Future<RSResult?> GoSign(
       // SendPort sendPort,
+      // List<String> args,
       String name,
       String str,
       String str1,

@@ -110,8 +110,8 @@ class _SelectCoinDialogState extends State<SelectCoinDialog> with AutomaticKeepA
                     ),
                     SubmitBtnWidget(
                         content: 'Confirm'.tr,
-                        bgColor: Color(0xff7618E8),
-                        hasBorder: false,
+                        bgColor: ColorConstant.themeColor,
+                        hasBorder: true,
                         callback: () {
                           widget.callback(ids);
                           Get.back();

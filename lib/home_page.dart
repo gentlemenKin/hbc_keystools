@@ -202,7 +202,7 @@ class _HomePageState extends State<HomePage> {
                       setState(() {});
                     },
                     child: TabWidget(
-                      title: '恢复私钥',
+                      title: 'RecoveryKey'.tr,
                       isSelected: recoverySelected,
                       showMore: true,
                     )),
@@ -215,7 +215,7 @@ class _HomePageState extends State<HomePage> {
                     setState(() {});
                   },
                   child: TabWidget(
-                    title: 'EDDSA转账',
+                    title: 'EDDSATransfer'.tr,
                     isSelected: !recoverySelected,
                     showMore: false,
                   ),

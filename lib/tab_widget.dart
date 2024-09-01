@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hbc_keystools/local/color_constant.dart';
 import 'package:hbc_keystools/local/constant.dart';
 import 'package:hbc_keystools/widget/buble_widget.dart';
@@ -60,7 +61,7 @@ class _TabWidgetState extends State<TabWidget> {
                       child: Container(
                           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
                           child: Text(
-                            '目前Solana、Aptos、Polkadot导出的是EdDSA 私钥不支持钱包导入的方式，您需要转账可以通过恢复的私钥使用EdDSA 转账工具完成.',
+                            'TransferWaring'.tr,
                             style: const TextStyle(
                               color: ColorConstant.color_0xffD1D5DB,
                               fontSize: 12,
