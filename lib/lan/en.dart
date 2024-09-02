@@ -50,7 +50,7 @@ const Map<String,String> en_US = {
   "CustomRPC":'Customizable RPC nodes',
   "EnsureTransfer":'Confirm to transfer out',
   "TransferDeclaration":'Note the transfer instructions:',
-  "Declaration1":'1. Confirming the transfer means that you agree to the client’s online operation for on-chain broadcast.',
+  "Declaration1":'Confirming the transfer means that you agree to the client’s online operation for on-chain broadcast.',
   "Declaration2":'2. For offline signature, it will generate a signed message code on the client side. Please copy the message code and entrust a third party to perform the on-chain broadcast transaction.',
   "BlockExplorer":'Copy the address from the CipherBC application and go to the block explorer to query》',
   "CustomCoin":'Customized currency',
@@ -69,4 +69,5 @@ const Map<String,String> en_US = {
   "HintAddress":'Please enter the receiving address',
   "HintContract":'Please enter the smart  contract of the currency',
   "HintRPC":'Please enter the RPC address',
+  "copy":'Copied',
 };

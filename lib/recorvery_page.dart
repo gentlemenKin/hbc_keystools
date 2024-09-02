@@ -200,6 +200,7 @@ class _RecoveryPageState extends State<RecoveryPage> {
                           chain = chain.substring(0, chain.length - 1);
                           chainId = chainId.substring(0, chainId.length - 1);
                           chooseChainName = chain;
+
                           debugPrint('当前选中的所有chain：$chain');
                           debugPrint('当前选中的所有chainId：$chainId');
                           setState(() {});
@@ -389,7 +390,7 @@ class _RecoveryPageState extends State<RecoveryPage> {
                       child: Text(
                         'clear'.tr,
                         style: TextStyle(
-                          color: ColorConstant.themeColor,
+                          color: ColorConstant.color_0x000000,
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
                         ),

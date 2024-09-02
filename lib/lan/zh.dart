@@ -49,7 +49,7 @@ const Map<String ,String> zh_CN = {
   "CustomRPC":'可自定义RPC节点',
   "EnsureTransfer":'确认转出',
   "TransferDeclaration":'注意，转出说明：',
-  "Declaration1":'1.确认转出，表示您同意客户端联网进行链上广播交易的联网操作',
+  "Declaration1":'确认转出，表示您同意客户端联网进行链上广播交易的联网操作',
   "Declaration2":'2.离线签名，客户端将生成一段已签名的消息码，您需复制消息码并委托第三方进行上链广播交易',
   "BlockExplorer":'从CipherBC应用复制地址后前往区块浏览器查询》',
   "CustomCoin":'自定义币种',
@@ -68,4 +68,5 @@ const Map<String ,String> zh_CN = {
   "HintAddress":'请输入接收的地址',
   "HintContract":'请输入币种合约',
   "HintRPC":'请输入RPC地址',
+  "copy":'复制成功',
 };

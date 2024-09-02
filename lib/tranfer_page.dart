@@ -42,7 +42,7 @@ class _TransferPageState extends State<TransferPage> {
     SponsorBean(false, 'Polkadot', '3'),
   ];
   final List<String> node = ['https://api.mainnet-beta.solana.com', 'https://fullnode.mainnet.aptoslabs.com', 'https://polkadot-public-sidecar.parity-chains.parity.io'];
-  final List<String> scan = ['https://solscan.io', 'https://aptoscan.com', 'https://polkadot.subscan.io'];
+  final List<String> scan = ['https://solscan.io/tx', 'https://aptoscan.com/tx', 'https://polkadot.subscan.io/tx'];
   final List<String> coins = ['Sol', 'Apt', 'Dot'];
 
   List<SponsorBean> sloCoins = [
@@ -62,7 +62,7 @@ class _TransferPageState extends State<TransferPage> {
   List<SponsorBean> defaultCoins = [];
   String defaultCoin = 'Sol';
   String defaultNode = 'https://api.mainnet-beta.solana.com';
-  String defaultScan = 'https://solscan.io';
+  String defaultScan = 'https://solscan.io/tx';
 
   TextEditingController _transferAmountController = TextEditingController();
   TextEditingController _transferFromController = TextEditingController();
@@ -215,6 +215,10 @@ class _TransferPageState extends State<TransferPage> {
                         element.isSlected = false;
                       });
                       chains[data].isSlected = true;
+                      customize = false;
+                      _transferAmountController.clear();
+                      _transferFromController.clear();
+                      _transferToController.clear();
                       if (mounted) {
                         setState(() {});
                       }
@@ -418,11 +422,12 @@ class _TransferPageState extends State<TransferPage> {
                         if (res != null) {
                           EasyLoading.dismiss();
                           if (res.ok == 1) {
-                            debugPrint('${res.data.toDartString()}');
+                            // EasyLoading.showToast('${res.data.toDartString()}',duration: const Duration(seconds: 5));
+                            // debugPrint('${res.data.toDartString()}');
                             EasyLoading.dismiss();
                             Get.dialog(DialogWidget(
                               child: EnsureDialog(
-                                myUrl: defaultScan,
+                                myUrl: defaultScan+'${res.data.toDartString()}',
                               ),
                               width: 440,
                               height: 300,
@@ -491,14 +496,14 @@ class _TransferPageState extends State<TransferPage> {
               fontWeight: FontWeight.w400,
             ),
           ),
-          Text(
-            'Declaration2'.tr,
-            style: TextStyle(
-              color: ColorConstant.color_0x000000,
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-            ),
-          ),
+          // Text(
+          //   'Declaration2'.tr,
+          //   style: TextStyle(
+          //     color: ColorConstant.color_0x000000,
+          //     fontSize: 14,
+          //     fontWeight: FontWeight.w400,
+          //   ),
+          // ),
           SizedBox(
             height: 50,
           ),

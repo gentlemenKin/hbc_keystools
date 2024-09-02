@@ -32,7 +32,7 @@ class _TabWidgetState extends State<TabWidget> {
             Text(
               widget.title,
               style: TextStyle(
-                color: widget.isSelected ? ColorConstant.themeColor : Color(0xff1F2937),
+                color: ColorConstant.color_0xff1F2937,
                 fontSize: 20,
                 fontWeight: FontWeight.w500,
               ),
