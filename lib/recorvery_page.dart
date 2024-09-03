@@ -155,7 +155,7 @@ class _RecoveryPageState extends State<RecoveryPage> {
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20),
+          padding: const EdgeInsets.symmetric(vertical: 20,horizontal: 100),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,

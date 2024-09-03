@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 100,vertical: 10),
+        padding: EdgeInsets.symmetric(vertical: 10),
         child: Column(
           children: [
             Row(
@@ -86,7 +86,7 @@ class _HomePageState extends State<HomePage> {
                                             borderRadius: BorderRadius.all(
                                               Radius.circular(10),
                                             ),
-                                            color: ColorConstant.themeColor,
+                                            color: ColorConstant.color_0x000000,
                                           ),
                                           width: 10,
                                           height: 10,
@@ -127,7 +127,7 @@ class _HomePageState extends State<HomePage> {
                                         Container(
                                           decoration: BoxDecoration(
                                             borderRadius: BorderRadius.all(Radius.circular(10)),
-                                            color: ColorConstant.themeColor,
+                                            color: ColorConstant.color_0x000000,
                                           ),
                                           width: 10,
                                           height: 10,
@@ -190,37 +190,40 @@ class _HomePageState extends State<HomePage> {
             SizedBox(
               height: 40,
             ),
-            Row(
-              children: [
-                GestureDetector(
-                    onTap: () {
-                      if (!recoverySelected) {
-                        _controller.jumpToPage(0);
-                      }
-                      recoverySelected = true;
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 100),
+              child: Row(
+                children: [
+                  GestureDetector(
+                      onTap: () {
+                        if (!recoverySelected) {
+                          _controller.jumpToPage(0);
+                        }
+                        recoverySelected = true;
 
+                        setState(() {});
+                      },
+                      child: TabWidget(
+                        title: 'RecoveryKey'.tr,
+                        isSelected: recoverySelected,
+                        showMore: true,
+                      )),
+                  GestureDetector(
+                    onTap: () {
+                      if (recoverySelected) {
+                        _controller.jumpToPage(2);
+                      }
+                      recoverySelected = false;
                       setState(() {});
                     },
                     child: TabWidget(
-                      title: 'RecoveryKey'.tr,
-                      isSelected: recoverySelected,
-                      showMore: true,
-                    )),
-                GestureDetector(
-                  onTap: () {
-                    if (recoverySelected) {
-                      _controller.jumpToPage(2);
-                    }
-                    recoverySelected = false;
-                    setState(() {});
-                  },
-                  child: TabWidget(
-                    title: 'EDDSATransfer'.tr,
-                    isSelected: !recoverySelected,
-                    showMore: false,
-                  ),
-                )
-              ],
+                      title: 'EDDSATransfer'.tr,
+                      isSelected: !recoverySelected,
+                      showMore: false,
+                    ),
+                  )
+                ],
+              ),
             ),
             Expanded(
                 child: PageView(
