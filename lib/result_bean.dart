@@ -17,18 +17,18 @@
 class ItemBean{
 
   int valutIndex;
-  String CoinType;
+  String Chain;
   String Address;
   String PrivKey;
   ItemBean({
     required this.valutIndex,
-    required this.CoinType,
+    required this.Chain,
     required this.Address,
     required this.PrivKey,
 });
   factory ItemBean.fromJson(Map<String, dynamic> json) => ItemBean(
     valutIndex: json["VaultIndex"],
-    CoinType: json["Chain"],
+      Chain: json["Chain"],
     Address: json['Address'],
     PrivKey: json['PrivKey']
   );

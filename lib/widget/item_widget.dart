@@ -36,10 +36,12 @@ class _ItemWidgetState extends State<ItemWidget> with AutomaticKeepAliveClientMi
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
         onTap: () {
           widget.callback(widget.index);
         },
         child: Container(
+          width: 200,
           margin: const EdgeInsets.only(
             bottom: 4,
             right: 7,
@@ -65,7 +67,7 @@ class _ItemWidgetState extends State<ItemWidget> with AutomaticKeepAliveClientMi
                     AssetsConstant.select,
                     width: 20,
                     height: 20,
-                    color: ColorConstant.themeColor,
+                    color: ColorConstant.color_0x000000,
                   ),
                 ),
             ],

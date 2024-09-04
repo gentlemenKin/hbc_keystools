@@ -63,7 +63,7 @@ class _TransferPageState extends State<TransferPage> {
   String defaultCoin = 'Sol';
   String defaultNode = 'https://api.mainnet-beta.solana.com';
   String defaultScan = 'https://solscan.io/tx';
-
+  int defaultChainIndex = 0;
   TextEditingController _transferAmountController = TextEditingController();
   TextEditingController _transferFromController = TextEditingController();
   TextEditingController _transferToController = TextEditingController();
@@ -98,12 +98,21 @@ class _TransferPageState extends State<TransferPage> {
     //   debugPrint('当前的语言：$event');
     //   currentLan = event;
     // });
-    defaultCoins = sloCoins;
+    defaultCoins = [
+      SponsorBean(true, 'Sol', '1'),
+      SponsorBean(false, 'USDT_Solana', '2'),
+      SponsorBean(false, 'CustomCoin'.tr, '3'),
+    ];
     _transferRpcController.text = defaultNode;
     _transferAmountController.addListener(() {
       if (_transferAmountController.text.trim().isEmpty) {
         // showError5 = true;
       } else {
+        if (defaultCoin == 'DOT') {
+          if (_transferAmountController.text.toString().startsWith('0')) {
+            _transferAmountController.text = '1';
+          }
+        }
         showError5 = false;
       }
       setState(() {});
@@ -203,13 +212,26 @@ class _TransferPageState extends State<TransferPage> {
                         _transferRpcController.text = defaultNode;
                         switch (data) {
                           case 0: //sol
-                            defaultCoins = sloCoins;
+                            defaultCoins = [
+                              SponsorBean(true, 'Sol', '1'),
+                              SponsorBean(false, 'USDT_Solana', '2'),
+                              SponsorBean(false, 'CustomCoin'.tr, '3'),
+                            ];
+                            defaultChainIndex = 0;
                             break;
                           case 1: //apt
-                            defaultCoins = aptCoins;
+                            defaultCoins = [
+                              SponsorBean(true, 'APT', '2'),
+                              SponsorBean(false, 'CustomCoin'.tr, '3'),
+                            ];
+                            defaultChainIndex = 1;
                             break;
                           case 2: //dot
-                            defaultCoins = dotCoins;
+                            defaultCoins = [
+                              SponsorBean(true, 'DOT', '2'),
+                              SponsorBean(false, 'CustomCoin'.tr, '3'),
+                            ];
+                            defaultChainIndex = 2;
                             break;
                         }
                         defaultCoin = defaultCoins[0].userName;
@@ -221,6 +243,7 @@ class _TransferPageState extends State<TransferPage> {
                         _transferAmountController.clear();
                         _transferFromController.clear();
                         _transferToController.clear();
+                        _transferAddressController.clear();
                         if (mounted) {
                           setState(() {});
                         }
@@ -257,7 +280,7 @@ class _TransferPageState extends State<TransferPage> {
                     },
                     child: Text(
                       'BlockExplorer'.tr,
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: ColorConstant.themeColor),
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: ColorConstant.color_0x000000),
                     ),
                   ),
                 ),
@@ -269,23 +292,39 @@ class _TransferPageState extends State<TransferPage> {
             InputRowSelectWidget(
               title: 'TransferCurrency'.tr,
               hint: 'ChooseChain'.tr,
-              content: defaultCoin,
+              content: customize?'CustomCoin'.tr:defaultCoin,
               callback: () {
                 Get.dialog(DialogWidget(
                     padding: EdgeInsets.zero,
                     width: 400,
                     height: 200,
                     child: SelectSingleDialog(
-                      chains: defaultCoins,
+                      chains: defaultChainIndex == 0
+                          ? [
+                              SponsorBean(true, 'Sol', '1'),
+                              SponsorBean(false, 'USDT_Solana', '2'),
+                              SponsorBean(false, 'CustomCoin'.tr, '3'),
+                            ]
+                          : defaultChainIndex == 1
+                              ? [
+                                  SponsorBean(true, 'APT', '2'),
+                                  SponsorBean(false, 'CustomCoin'.tr, '3'),
+                                ]
+                              : [
+                                  SponsorBean(true, 'DOT', '2'),
+                                  SponsorBean(false, 'CustomCoin'.tr, '3'),
+                                ],
                       callback: (int data) {
                         debugPrint('当前的data：$data');
                         //如果是最后一项要展示自定义。
                         if (data + 1 == defaultCoins.length) {
                           customize = true;
+                          // defaultCoin = 'CustomCoin'.tr;
                         } else {
                           customize = false;
+                          defaultCoin = defaultCoins[data].userName;
                         }
-                        defaultCoin = defaultCoins[data].userName;
+
                         defaultCoins.forEach((element) {
                           element.isSlected = false;
                         });
@@ -429,7 +468,7 @@ class _TransferPageState extends State<TransferPage> {
                               EasyLoading.dismiss();
                               Get.dialog(DialogWidget(
                                 child: EnsureDialog(
-                                  myUrl: defaultScan+'${res.data.toDartString()}',
+                                  myUrl: defaultScan + '${res.data.toDartString()}',
                                 ),
                                 width: 440,
                                 height: 300,
@@ -490,14 +529,14 @@ class _TransferPageState extends State<TransferPage> {
                 fontWeight: FontWeight.w400,
               ),
             ),
-            Text(
-              'Declaration1'.tr,
-              style: TextStyle(
-                color: ColorConstant.color_0x000000,
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
+            // Text(
+            //   'Declaration1'.tr,
+            //   style: TextStyle(
+            //     color: ColorConstant.color_0x000000,
+            //     fontSize: 14,
+            //     fontWeight: FontWeight.w400,
+            //   ),
+            // ),
             // Text(
             //   'Declaration2'.tr,
             //   style: TextStyle(

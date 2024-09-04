@@ -408,6 +408,7 @@ class _RecoveryPageState extends State<RecoveryPage> {
                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: ColorConstant.color_0x000000),
                     ),
                   ),
+                  SizedBox(width: 12,),
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -1415,6 +1416,42 @@ class _RecoveryPageState extends State<RecoveryPage> {
                   )
                 ],
               ),
+              SizedBox(
+                height: 50,
+              ),
+              Text(
+                'recovery_waring'.tr,
+                style: TextStyle(
+                  color: ColorConstant.color_0x000000,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              Text(
+                'recovery_waring1'.tr,
+                style: TextStyle(
+                  color: ColorConstant.color_0x000000,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              Text(
+                'recovery_waring2'.tr,
+                style: TextStyle(
+                  color: ColorConstant.color_0x000000,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              // Text(
+              //   'Declaration2'.tr,
+              //   style: TextStyle(
+              //     color: ColorConstant.color_0x000000,
+              //     fontSize: 14,
+              //     fontWeight: FontWeight.w400,
+              //   ),
+              // ),
+
               if (resultList.isNotEmpty)
                 Container(
                   height: 310,
@@ -1456,7 +1493,7 @@ class _RecoveryPageState extends State<RecoveryPage> {
                           if (resultList.isNotEmpty) {
                             resultList.forEach((element) {
                               sheet.appendRow([
-                                TextCellValue(element.CoinType),
+                                TextCellValue(element.Chain),
                                 TextCellValue(element.Address),
                                 TextCellValue(element.PrivKey),
                               ]);

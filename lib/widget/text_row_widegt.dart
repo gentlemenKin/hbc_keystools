@@ -12,10 +12,11 @@ class TextRowWidget extends StatelessWidget {
     Key? key,
     required this.title,
     required this.hint,
+    required this.showCopy,
   }) : super(key: key);
   final String title;
   final String hint;
-
+  final bool showCopy;
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -44,6 +45,7 @@ class TextRowWidget extends StatelessWidget {
                   hint,
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: ColorConstant.color_0xff6B7280),
                 ),
+                if(showCopy)
                 MouseRegion(
                   cursor: SystemMouseCursors.click,
                   child: GestureDetector(

@@ -12,14 +12,19 @@ class privateKeyWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
+
         SizedBox(
           height: 30,
         ),
-        TextRowWidget(title: 'ChildExtended'.tr, hint: bean.PrivKey),
+        TextRowWidget(title: 'Chain'.tr, hint: bean.Chain,showCopy: false,),
         SizedBox(
           height: 10,
         ),
-        TextRowWidget(title: 'Address'.tr, hint: bean.Address),
+        TextRowWidget(title: 'ChildExtended'.tr, hint: bean.PrivKey,showCopy: true,),
+        SizedBox(
+          height: 10,
+        ),
+        TextRowWidget(title: 'Address'.tr, hint: bean.Address,showCopy: true,),
       ],
     );
   }

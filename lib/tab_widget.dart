@@ -55,24 +55,22 @@ class _TabWidgetState extends State<TabWidget> {
                           key,
                           BubbleWidget(
                             widget.key,
-                            240.0,
-                            80.0,
+                            360.0,
+                            120.0,
                             ColorConstant.color_0x000000,
                             BubbleArrowDirection.top,
                             innerPadding: 0.0,
                             radius: 4.0,
-                            child: SingleChildScrollView(
-                              child: Container(
-                                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
-                                  child: Text(
-                                    'TransferWaring'.tr,
-                                    style: const TextStyle(
-                                      color: ColorConstant.color_0xffD1D5DB,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  )),
-                            ),
+                            child: Container(
+                                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+                                child: Text(
+                                  'TransferWaring'.tr,
+                                  style: const TextStyle(
+                                    color: ColorConstant.color_0xffD1D5DB,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                )),
                           ),
                           margin: 10.0,
                           offLeft: 0);

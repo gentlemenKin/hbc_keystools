@@ -31,7 +31,6 @@ class InputInfoRowWidget extends StatelessWidget {
   final String errorMsg;
   final GlobalKey globalKey;
   final String content;
-
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -66,12 +65,14 @@ class InputInfoRowWidget extends StatelessWidget {
                             radius: 4.0,
                             child: Container(
                                 padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
-                                child: Text(
-                                  content,
-                                  style: const TextStyle(
-                                    color: Color(0xffD1D5DB),
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w400,
+                                child: SingleChildScrollView(
+                                  child: Text(
+                                    content,
+                                    style: const TextStyle(
+                                      color: Color(0xffD1D5DB),
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400,
+                                    ),
                                   ),
                                 )),
                           ),
