@@ -29,24 +29,33 @@ class TransferWaringWidget extends StatelessWidget {
           SizedBox(
             height: 24,
           ),
-          Text('transferConfirmWaring'.tr,
-              style: TextStyle(
-                color: ColorConstant.color_0x000000,
-                fontSize: 14,
-                fontWeight: FontWeight.w300,
-              )),
-          Text('transferConfirmWaring1'.tr,
-              style: TextStyle(
-                color: ColorConstant.color_0x000000,
-                fontSize: 14,
-                fontWeight: FontWeight.w300,
-              )),
-          Text('transferConfirmWaring2'.tr,
-              style: TextStyle(
-                color: ColorConstant.color_0x000000,
-                fontSize: 14,
-                fontWeight: FontWeight.w300,
-              )),
+          Container(
+            constraints: BoxConstraints(maxHeight: 96),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Text('transferConfirmWaring'.tr,
+                      style: TextStyle(
+                        color: ColorConstant.color_0x000000,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w300,
+                      )),
+                  Text('transferConfirmWaring1'.tr,
+                      style: TextStyle(
+                        color: ColorConstant.color_0x000000,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w300,
+                      )),
+                  Text('transferConfirmWaring2'.tr,
+                      style: TextStyle(
+                        color: ColorConstant.color_0x000000,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w300,
+                      )),
+                ],
+              ),
+            ),
+          ),
           SizedBox(
             height: 24,
           ),
