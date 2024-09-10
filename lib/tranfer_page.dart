@@ -43,9 +43,9 @@ class _TransferPageState extends State<TransferPage> {
     SponsorBean(false, 'Polkadot', '3'),
   ];
   final List<String> node = ['https://api.mainnet-beta.solana.com', 'https://fullnode.mainnet.aptoslabs.com', 'https://polkadot-public-sidecar.parity-chains.parity.io'];
-  final List<String> scan = ['https://solscan.io/tx', 'https://aptoscan.com/tx', 'https://polkadot.subscan.io/tx'];
+  final List<String> scan = ['https://solscan.io/tx', 'https://aptoscan.com/transaction', 'https://polkadot.subscan.io/extrinsic'];
   final List<String> coins = ['Sol', 'Apt', 'Dot'];
-
+  final List<String> searchScan = ['https://solscan.io/', 'https://aptoscan.com', 'https://polkadot.subscan.io/extrinsic'];
   List<SponsorBean> sloCoins = [
     SponsorBean(true, 'Sol', '1'),
     SponsorBean(false, 'USDT_Solana', '2'),
@@ -64,6 +64,7 @@ class _TransferPageState extends State<TransferPage> {
   String defaultCoin = 'Sol';
   String defaultNode = 'https://api.mainnet-beta.solana.com';
   String defaultScan = 'https://solscan.io/tx';
+  String defaultSearchScan = 'https://solscan.io/';
   int defaultChainIndex = 0;
   TextEditingController _transferAmountController = TextEditingController();
   TextEditingController _transferFromController = TextEditingController();
@@ -210,6 +211,7 @@ class _TransferPageState extends State<TransferPage> {
                         chooseChainName = chains[data].userName;
                         defaultNode = node[data];
                         defaultScan = scan[data];
+                        defaultSearchScan = searchScan[data];
                         _transferRpcController.text = defaultNode;
                         switch (data) {
                           case 0: //sol
@@ -274,7 +276,7 @@ class _TransferPageState extends State<TransferPage> {
                   cursor: SystemMouseCursors.click,
                   child: GestureDetector(
                     onTap: () async {
-                      final Uri url = Uri.parse(defaultScan);
+                      final Uri url = Uri.parse(defaultSearchScan);
                       if (await canLaunchUrl(url)) {
                         await launchUrl(url);
                       }
