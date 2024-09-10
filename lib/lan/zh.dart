@@ -73,4 +73,7 @@ const Map<String ,String> zh_CN = {
   "recovery_waring":"注意：点击“生成全部私钥”，客户端将离线生成指定链的子私钥和对应地址",
   "recovery_waring1":"1.生成的子私钥，您可以通过第三方应用导入钱包进行恢复。请及时做好安全备份并妥善保存。",
   "recovery_waring2":"2.生成的地址，您可以前往对应区块浏览器查询余额。",
+  "transferConfirmWaring":'1.您即将联网并发起转出请求，请检查转出地址是否正确；',
+  "transferConfirmWaring1":'2.避免转出失败和GAS消耗，请确保转出代币和GAS充足；',
+  "transferConfirmWaring2":'3.避免链上机制清空DOT<1帐户的风险，请转出DOT确保转出后链上余额 >1。',
 };

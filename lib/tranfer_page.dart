@@ -21,6 +21,7 @@ import 'package:hbc_keystools/widget/input_row_select_widget.dart';
 import 'package:hbc_keystools/widget/input_row_widget.dart';
 import 'package:hbc_keystools/widget/select_coin_dialog.dart';
 import 'package:hbc_keystools/widget/select_single_dialog.dart';
+import 'package:hbc_keystools/widget/transfer_waring_widget.dart';
 import 'package:hex/hex.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -447,45 +448,50 @@ class _TransferPageState extends State<TransferPage> {
                           debugPrint('第7个参数：${LanStream().currentLan}');
 
                           ///判断输入是否符合标准
-                          EasyLoading.show();
-                          final res = await compute(NativeLib().GoTransfer, {
-                            'name': chooseChainName,
-                            'str': _transferRpcController.text.trim().toString(),
-                            'str1': _transferFromController.text.trim().toString(),
-                            'str2': _transferToController.text.trim().toString(),
-                            'str3': _transferAmountController.text.trim().toString(),
-                            'string4': coinAddress,
-                            'str5': LanStream().currentLan,
-                          });
-                          // final res = await NativeLib().GoTransfer(chooseChainName, _transferRpcController.text.toString(), _transferFromController.text.toString(),
-                          //     _transferToController.text.toString(), _transferAmountController.text.toString(), coinAddress, LanStream().currentLan);
-                          debugPrint('当前的结果：res:$res');
-                          if (res != null) {
-                            EasyLoading.dismiss();
-                            if (res.ok == 1) {
-                              // EasyLoading.showToast('${res.data.toDartString()}',duration: const Duration(seconds: 5));
-                              // debugPrint('${res.data.toDartString()}');
-                              EasyLoading.dismiss();
-                              Get.dialog(DialogWidget(
-                                child: EnsureDialog(
-                                  myUrl: defaultScan + '${res.data.toDartString()}',
-                                ),
-                                width: 440,
-                                height: 300,
-                              ));
-                            } else {
-                              Get.dialog(DialogWidget(
-                                child: FailDialog(
-                                  msg: res.errMsg.toDartString(),
-                                ),
-                                width: 440,
-                                height: 330,
-                              ));
-                              // EasyLoading.showToast(res.errMsg.toDartString());
-                            }
-                          } else {
-                            EasyLoading.dismiss();
-                          }
+                          Get.dialog(DialogWidget(
+                            child: TransferWaringWidget(sure: () async{
+                              EasyLoading.show();
+                              final res = await compute(NativeLib().GoTransfer, {
+                                'name': chooseChainName,
+                                'str': _transferRpcController.text.trim().toString(),
+                                'str1': _transferFromController.text.trim().toString(),
+                                'str2': _transferToController.text.trim().toString(),
+                                'str3': _transferAmountController.text.trim().toString(),
+                                'string4': coinAddress,
+                                'str5': LanStream().currentLan,
+                              });
+                              debugPrint('当前的结果：res:$res');
+                              if (res != null) {
+                                EasyLoading.dismiss();
+                                if (res.ok == 1) {
+                                  EasyLoading.dismiss();
+                                  Get.dialog(DialogWidget(
+                                    child: EnsureDialog(
+                                      myUrl: defaultScan + '${res.data.toDartString()}',
+                                    ),
+                                    width: 440,
+                                    height: 300,
+                                  ));
+                                } else {
+                                  Get.dialog(DialogWidget(
+                                    child: FailDialog(
+                                      msg: res.errMsg.toDartString(),
+                                    ),
+                                    width: 440,
+                                    height: 330,
+                                  ));
+                                  // EasyLoading.showToast(res.errMsg.toDartString());
+                                }
+                              } else {
+                                EasyLoading.dismiss();
+                              }
+
+                            },
+                            ),
+                            width: 440,
+                            height: 270,
+                          ));
+
                         } else {
                           EasyLoading.showToast('noNet'.tr);
                         }
