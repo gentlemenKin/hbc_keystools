@@ -47,44 +47,42 @@ class InputInfoRowWidget extends StatelessWidget {
               SizedBox(width: 4,),
               MouseRegion(
                 cursor: SystemMouseCursors.click,
-                onEnter: (_) {},
-                onExit: (_) {
-                  // PopupWindow.hint();
+                onEnter: (_) {
+                  NewPopupWindow.create(
+                      globalKey,
+                      BubbleWidget(
+                        key,
+                        300.0,
+                        120.0,
+                        ColorConstant.color_0x000000,
+                        BubbleArrowDirection.top,
+                        innerPadding: 0.0,
+                        radius: 4.0,
+                        child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+                            child: SingleChildScrollView(
+                              child: Text(
+                                content,
+                                style: const TextStyle(
+                                  color: Color(0xffD1D5DB),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            )),
+                      ),
+                      margin: 10.0,
+                      offLeft: 0);
                 },
-                child: GestureDetector(
-                    onTap: () {
-                      PopupWindow.create(
-                          globalKey,
-                          BubbleWidget(
-                            key,
-                            240.0,
-                            80.0,
-                            ColorConstant.color_0x000000,
-                            BubbleArrowDirection.top,
-                            innerPadding: 0.0,
-                            radius: 4.0,
-                            child: Container(
-                                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
-                                child: SingleChildScrollView(
-                                  child: Text(
-                                    content,
-                                    style: const TextStyle(
-                                      color: Color(0xffD1D5DB),
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                )),
-                          ),
-                          margin: 10.0,
-                          offLeft: 0);
-                    },
-                    child: Image.asset(
-                      key: globalKey,
-                      AssetsConstant.infoBlack,
-                      width: 20,
-                      height: 20,
-                    )),
+                onExit: (_) {
+                  NewPopupWindow.hint();
+                },
+                child: Image.asset(
+                  key: globalKey,
+                  AssetsConstant.infoBlack,
+                  width: 20,
+                  height: 20,
+                ),
               ),
             ],
           ),

@@ -45,43 +45,41 @@ class _TabWidgetState extends State<TabWidget> {
             if (widget.showMore)
               MouseRegion(
                 cursor: SystemMouseCursors.click,
-                onEnter: (_) {},
-                onExit: (_) {
-                  // NewPopupWindow.hint();
+                onEnter: (_) {
+                  NewPopupWindow.create(
+                      key,
+                      BubbleWidget(
+                        widget.key,
+                        360.0,
+                        120.0,
+                        ColorConstant.color_0x000000,
+                        BubbleArrowDirection.top,
+                        innerPadding: 0.0,
+                        radius: 4.0,
+                        child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+                            child: Text(
+                              'TransferWaring'.tr,
+                              style: const TextStyle(
+                                color: ColorConstant.color_0xffD1D5DB,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            )),
+                      ),
+                      margin: 10.0,
+                      offLeft: 0);
                 },
-                child: GestureDetector(
-                    onTap: () {
-                      PopupWindow.create(
-                          key,
-                          BubbleWidget(
-                            widget.key,
-                            360.0,
-                            120.0,
-                            ColorConstant.color_0x000000,
-                            BubbleArrowDirection.top,
-                            innerPadding: 0.0,
-                            radius: 4.0,
-                            child: Container(
-                                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
-                                child: Text(
-                                  'TransferWaring'.tr,
-                                  style: const TextStyle(
-                                    color: ColorConstant.color_0xffD1D5DB,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                )),
-                          ),
-                          margin: 10.0,
-                          offLeft: 0);
-                    },
-                    child: Image.asset(
-                      key: key,
-                      AssetsConstant.info,
-                      width: 20,
-                      height: 20,
-                      color: ColorConstant.color_0x000000,
-                    )),
+                onExit: (_) {
+                  NewPopupWindow.hint();
+                },
+                child: Image.asset(
+                  key: key,
+                  AssetsConstant.info,
+                  width: 20,
+                  height: 20,
+                  color: ColorConstant.color_0x000000,
+                ),
               ),
           ],
         ),
