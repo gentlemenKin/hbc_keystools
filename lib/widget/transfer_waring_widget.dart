@@ -19,7 +19,7 @@ class TransferWaringWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '转出提示',
+            '转出提示'.tr,
             style: TextStyle(
               color: ColorConstant.color_0xff333333,
               fontSize: 18,

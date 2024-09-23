@@ -78,4 +78,5 @@ const Map<String, String> en_US = {
   "transferConfirmWaring":'1. You are about to connect to the internet and initiate a transfer request, please check if the transfer address is correct;',
   "transferConfirmWaring1":'2. To avoid transfer failures and gas fee consumption, please ensure that there is a sufficient balance of tokens and gas fee;',
   "transferConfirmWaring2":'3. To avoid the risk of clearing DOT<1 account due to on-chain mechanisms, please transfer DOT to ensure that the on-chain balance after the transfer is >1.',
+  "转出提示":"Tips",
 };
