@@ -30,9 +30,9 @@ class _SelectSingleDialogState extends State<SelectSingleDialog> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 400,
-      width: 200,
-      padding: const EdgeInsets.only(top: 28),
+      height: 450,
+      width: 250,
+      padding: const EdgeInsets.only(top: 28,bottom: 20),
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: ColorConstant.color_0xffffff),
       child: ListView.builder(
           itemCount: iniData.length,

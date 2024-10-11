@@ -41,11 +41,17 @@ class _TransferPageState extends State<TransferPage> {
     SponsorBean(true, 'Solana', '1'),
     SponsorBean(false, 'Aptos', '2'),
     SponsorBean(false, 'Polkadot', '3'),
+    SponsorBean(false, 'TON', '4'),
   ];
-  final List<String> node = ['https://api.mainnet-beta.solana.com', 'https://fullnode.mainnet.aptoslabs.com', 'https://polkadot-public-sidecar.parity-chains.parity.io'];
-  final List<String> scan = ['https://solscan.io/tx', 'https://aptoscan.com/transaction', 'https://polkadot.subscan.io/extrinsic'];
-  final List<String> coins = ['Sol', 'Apt', 'Dot'];
-  final List<String> searchScan = ['https://solscan.io/', 'https://aptoscan.com', 'https://polkadot.subscan.io/extrinsic'];
+  final List<String> node = [
+    'https://api.mainnet-beta.solana.com',
+    'https://fullnode.mainnet.aptoslabs.com',
+    'https://polkadot-public-sidecar.parity-chains.parity.io',
+    'https://toncenter.com'
+  ];
+  final List<String> scan = ['https://solscan.io/tx', 'https://aptoscan.com/transaction', 'https://polkadot.subscan.io/extrinsic', 'https://tonviewer.com/transaction'];
+  final List<String> coins = ['Sol', 'Apt', 'Dot', 'TON'];
+  final List<String> searchScan = ['https://solscan.io/', 'https://aptoscan.com', 'https://polkadot.subscan.io/extrinsic', 'https://tonviewer.com/transaction'];
   List<SponsorBean> sloCoins = [
     SponsorBean(true, 'Sol', '1'),
     SponsorBean(false, 'USDT_Solana', '2'),
@@ -59,7 +65,11 @@ class _TransferPageState extends State<TransferPage> {
     SponsorBean(true, 'DOT', '2'),
     SponsorBean(false, 'CustomCoin'.tr, '3'),
   ];
-
+  List<SponsorBean> tonCoins = [
+    SponsorBean(true, 'TON', '2'),
+    SponsorBean(false, 'USDT_Ton', '2'),
+    SponsorBean(false, 'CustomCoin'.tr, '3'),
+  ];
   List<SponsorBean> defaultCoins = [];
   String defaultCoin = 'Sol';
   String defaultNode = 'https://api.mainnet-beta.solana.com';
@@ -187,8 +197,8 @@ class _TransferPageState extends State<TransferPage> {
               callback: () {
                 Get.dialog(DialogWidget(
                     padding: EdgeInsets.zero,
-                    width: 400,
-                    height: 200,
+                    width: 500,
+                    height: 250,
                     child: SelectSingleDialog(
                       chains: chains,
                       callback: (int data) {
@@ -205,6 +215,11 @@ class _TransferPageState extends State<TransferPage> {
                           ];
                           aptCoins = [
                             SponsorBean(true, 'APT', '2'),
+                            SponsorBean(false, 'CustomCoin'.tr, '3'),
+                          ];
+                          tonCoins = [
+                            SponsorBean(true, 'TON', '2'),
+                            SponsorBean(false, 'USDT_Ton', '2'),
                             SponsorBean(false, 'CustomCoin'.tr, '3'),
                           ];
                         }
@@ -235,6 +250,14 @@ class _TransferPageState extends State<TransferPage> {
                               SponsorBean(false, 'CustomCoin'.tr, '3'),
                             ];
                             defaultChainIndex = 2;
+                            break;
+                          case 3: //ton
+                            defaultCoins = [
+                              SponsorBean(true, 'TON', '1'),
+                              SponsorBean(false, 'USDT_Ton', '2'),
+                              SponsorBean(false, 'CustomCoin'.tr, '3'),
+                            ];
+                            defaultChainIndex = 3;
                             break;
                         }
                         defaultCoin = defaultCoins[0].userName;
@@ -295,7 +318,7 @@ class _TransferPageState extends State<TransferPage> {
             InputRowSelectWidget(
               title: 'TransferCurrency'.tr,
               hint: 'ChooseChain'.tr,
-              content: customize?'CustomCoin'.tr:defaultCoin,
+              content: customize ? 'CustomCoin'.tr : defaultCoin,
               callback: () {
                 Get.dialog(DialogWidget(
                     padding: EdgeInsets.zero,
@@ -313,10 +336,16 @@ class _TransferPageState extends State<TransferPage> {
                                   SponsorBean(true, 'APT', '2'),
                                   SponsorBean(false, 'CustomCoin'.tr, '3'),
                                 ]
-                              : [
-                                  SponsorBean(true, 'DOT', '2'),
-                                  SponsorBean(false, 'CustomCoin'.tr, '3'),
-                                ],
+                              : defaultChainIndex == 2
+                                  ? [
+                                      SponsorBean(true, 'DOT', '2'),
+                                      SponsorBean(false, 'CustomCoin'.tr, '3'),
+                                    ]
+                                  : [
+                                      SponsorBean(true, 'TON', '1'),
+                                      SponsorBean(false, 'USDT_Ton', '2'),
+                                      SponsorBean(false, 'CustomCoin'.tr, '3'),
+                                    ],
                       callback: (int data) {
                         debugPrint('当前的data：$data');
                         //如果是最后一项要展示自定义。
@@ -439,6 +468,9 @@ class _TransferPageState extends State<TransferPage> {
                             if (defaultCoin == 'USDT_Solana') {
                               coinAddress = 'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB';
                             }
+                            if(defaultCoin == 'USDT_Ton'){
+                              coinAddress = 'EQCxE6mUtQJKFnGfaROTKOt1lZbDiiX1kCixRv7Nw2Id_sDs';
+                            }
                           }
 
                           debugPrint('第一个参数：${chooseChainName}');
@@ -451,49 +483,48 @@ class _TransferPageState extends State<TransferPage> {
 
                           ///判断输入是否符合标准
                           Get.dialog(DialogWidget(
-                            child: TransferWaringWidget(sure: () async{
-                              EasyLoading.show();
-                              final res = await compute(NativeLib().GoTransfer, {
-                                'name': chooseChainName,
-                                'str': _transferRpcController.text.trim().toString(),
-                                'str1': _transferFromController.text.trim().toString(),
-                                'str2': _transferToController.text.trim().toString(),
-                                'str3': _transferAmountController.text.trim().toString(),
-                                'string4': coinAddress,
-                                'str5': LanStream().currentLan,
-                              });
-                              debugPrint('当前的结果：res:$res');
-                              if (res != null) {
-                                EasyLoading.dismiss();
-                                if (res.ok == 1) {
+                            child: TransferWaringWidget(
+                              sure: () async {
+                                EasyLoading.show();
+                                final res = await compute(NativeLib().GoTransfer, {
+                                  'name': chooseChainName,
+                                  'str': _transferRpcController.text.trim().toString(),
+                                  'str1': _transferFromController.text.trim().toString(),
+                                  'str2': _transferToController.text.trim().toString(),
+                                  'str3': _transferAmountController.text.trim().toString(),
+                                  'string4': coinAddress,
+                                  'str5': LanStream().currentLan,
+                                });
+                                debugPrint('当前的结果：res:$res');
+                                if (res != null) {
                                   EasyLoading.dismiss();
-                                  Get.dialog(DialogWidget(
-                                    child: EnsureDialog(
-                                      myUrl: defaultScan + '${res.data.toDartString()}',
-                                    ),
-                                    width: 440,
-                                    height: 300,
-                                  ));
+                                  if (res.ok == 1) {
+                                    EasyLoading.dismiss();
+                                    Get.dialog(DialogWidget(
+                                      child: EnsureDialog(
+                                        myUrl: defaultScan + '${res.data.toDartString()}',
+                                      ),
+                                      width: 440,
+                                      height: 300,
+                                    ));
+                                  } else {
+                                    Get.dialog(DialogWidget(
+                                      child: FailDialog(
+                                        msg: res.errMsg.toDartString(),
+                                      ),
+                                      width: 440,
+                                      height: 330,
+                                    ));
+                                    // EasyLoading.showToast(res.errMsg.toDartString());
+                                  }
                                 } else {
-                                  Get.dialog(DialogWidget(
-                                    child: FailDialog(
-                                      msg: res.errMsg.toDartString(),
-                                    ),
-                                    width: 440,
-                                    height: 330,
-                                  ));
-                                  // EasyLoading.showToast(res.errMsg.toDartString());
+                                  EasyLoading.dismiss();
                                 }
-                              } else {
-                                EasyLoading.dismiss();
-                              }
-
-                            },
+                              },
                             ),
                             width: 440,
                             height: 270,
                           ));
-
                         } else {
                           EasyLoading.showToast('noNet'.tr);
                         }
