@@ -81,11 +81,14 @@ class _TransferPageState extends State<TransferPage> {
   TextEditingController _transferToController = TextEditingController();
   TextEditingController _transferRpcController = TextEditingController();
   TextEditingController _transferAddressController = TextEditingController();
+  TextEditingController _MemoController = TextEditingController();
   bool showError4 = false;
   bool showError5 = false;
   bool showError6 = false;
   bool showError7 = false;
   bool showError8 = false;
+  bool showMemo = false;
+  bool showError9 = false;
   String path = '';
   GlobalKey amountKey = GlobalKey();
   GlobalKey rpcKey = GlobalKey();
@@ -100,6 +103,7 @@ class _TransferPageState extends State<TransferPage> {
     _transferToController.dispose();
     _transferRpcController.dispose();
     _transferAddressController.dispose();
+    _MemoController.dispose();
     super.dispose();
   }
 
@@ -171,6 +175,19 @@ class _TransferPageState extends State<TransferPage> {
       }
       setState(() {});
     });
+    _MemoController.addListener(() {
+      if (showMemo) {
+        if (_MemoController.text.trim().isEmpty) {
+        } else {
+          if (_MemoController.text.toString().length <= 30 && _MemoController.text.toString().contains(RegExp(r'^[a-zA-Z0-9]+$'))) {
+            showError9 = false;
+          } else {
+            showError9 = true;
+          }
+        }
+      }
+      setState(() {});
+    });
   }
 
   Future<bool> _isConnected() async {
@@ -228,6 +245,7 @@ class _TransferPageState extends State<TransferPage> {
                         defaultScan = scan[data];
                         defaultSearchScan = searchScan[data];
                         _transferRpcController.text = defaultNode;
+                        showMemo = false;
                         switch (data) {
                           case 0: //sol
                             defaultCoins = [
@@ -258,6 +276,7 @@ class _TransferPageState extends State<TransferPage> {
                               SponsorBean(false, 'CustomCoin'.tr, '3'),
                             ];
                             defaultChainIndex = 3;
+                            showMemo = true;
                             break;
                         }
                         defaultCoin = defaultCoins[0].userName;
@@ -423,6 +442,19 @@ class _TransferPageState extends State<TransferPage> {
             SizedBox(
               height: 30,
             ),
+            if (showMemo)
+              InputRowWidget(
+                title: 'MEMO',
+                controller: _MemoController,
+                hint: 'memoWaring'.tr,
+                showParse: true,
+                showError: showError9,
+                errorMsg: 'memoError'.tr,
+              ),
+            if (showMemo)
+              SizedBox(
+                height: 30,
+              ),
             InputInfoRowWidget(
               title: 'RPC',
               controller: _transferRpcController,
@@ -444,6 +476,7 @@ class _TransferPageState extends State<TransferPage> {
                       child: CommonButtonWidget(
                     callback: () async {
                       bool keyRight = false;
+                      bool MemeRight = true;
                       try {
                         final res = HEX.decode(_transferFromController.text.toString());
                         debugPrint('keyRight:$res');
@@ -454,25 +487,41 @@ class _TransferPageState extends State<TransferPage> {
                         keyRight = false;
                       }
                       debugPrint('keyRight:$keyRight');
+                      // 如果是ton判断长度和内容
+                      if (showMemo) {
+                        if (_MemoController.text.toString().isNotEmpty) {
+                          if (_MemoController.text.toString().length <= 30 && _MemoController.text.toString().contains(RegExp(r'^[a-zA-Z0-9]+$'))) {
+                            MemeRight = true;
+                          } else {
+                            MemeRight = false;
+                          }
+                        } else {
+                          MemeRight = false;
+                        }
+                      }
                       if (_transferRpcController.text.toString().isNotEmpty &&
                           _transferFromController.text.toString().isNotEmpty &&
                           _transferToController.text.toString().isNotEmpty &&
                           _transferAmountController.text.toString().isNotEmpty &&
-                          keyRight) {
+                          keyRight &&
+                          MemeRight) {
                         final res = await _isConnected();
                         if (!res) {
                           String coinAddress = '';
+                          String memo = '';
                           if (customize) {
                             coinAddress = _transferAddressController.text.toString();
                           } else {
                             if (defaultCoin == 'USDT_Solana') {
                               coinAddress = 'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB';
                             }
-                            if(defaultCoin == 'USDT_Ton'){
+                            if (defaultCoin == 'USDT_Ton') {
                               coinAddress = 'EQCxE6mUtQJKFnGfaROTKOt1lZbDiiX1kCixRv7Nw2Id_sDs';
                             }
                           }
-
+                          if(showMemo){
+                            memo = _MemoController.text.toString();
+                          }
                           debugPrint('第一个参数：${chooseChainName}');
                           debugPrint('第2个参数：${_transferRpcController.text.toString()}');
                           debugPrint('第3个参数：${_transferFromController.text.toString()}');
@@ -494,6 +543,7 @@ class _TransferPageState extends State<TransferPage> {
                                   'str3': _transferAmountController.text.trim().toString(),
                                   'string4': coinAddress,
                                   'str5': LanStream().currentLan,
+                                  'str6':memo,
                                 });
                                 debugPrint('当前的结果：res:$res');
                                 if (res != null) {
@@ -546,6 +596,12 @@ class _TransferPageState extends State<TransferPage> {
                         if (_transferAddressController.text.toString().isEmpty) {
                           showError4 = true;
                         }
+                        if (_MemoController.text.toString().isEmpty ||
+                            _MemoController.text.toString().length <= 30 ||
+                            _MemoController.text.toString().contains(RegExp(r'^[a-zA-Z0-9]+$'))) {
+                          showError9 = true;
+                        }
+
                         setState(() {});
                       }
                     },

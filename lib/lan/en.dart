@@ -79,4 +79,6 @@ const Map<String, String> en_US = {
   "transferConfirmWaring1":'2. To avoid transfer failures and gas fee consumption, please ensure that there is a sufficient balance of tokens and gas fee;',
   "transferConfirmWaring2":'3. To avoid the risk of clearing DOT<1 account due to on-chain mechanisms, please transfer DOT to ensure that the on-chain balance after the transfer is >1.',
   "转出提示":"Tips",
+  "memoWaring":"Please enter MEMO(option)",
+  "memoError":"Memo format error, please enter numbers or letters within 30 characters."
 };

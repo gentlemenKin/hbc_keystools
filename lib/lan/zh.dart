@@ -77,4 +77,6 @@ const Map<String ,String> zh_CN = {
   "transferConfirmWaring1":'2.避免转出失败和GAS消耗，请确保转出代币和GAS充足；',
   "transferConfirmWaring2":'3.避免链上机制清空DOT<1帐户的风险，请转出DOT确保转出后链上余额 >1。',
   "转出提示":"转出提示",
+  "memoWaring":"请输入MEMO（选填）",
+  "memoError":"MEMO 格式错误，请输入30个字符以内的数字或字母."
 };

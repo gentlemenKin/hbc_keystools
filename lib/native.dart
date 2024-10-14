@@ -81,6 +81,7 @@ typedef GoTransferC = RSResult Function(
   GoString str3,
   GoString str4,
   GoString str5,
+    GoString str6,
 );
 
 typedef GoTransferDart = RSResult Function(
@@ -91,6 +92,7 @@ typedef GoTransferDart = RSResult Function(
   GoString str3,
   GoString str4,
   GoString str5,
+    GoString str6,
 );
 
 typedef GoSingC = RSResult Function(
@@ -159,7 +161,7 @@ class NativeLib {
     }
   }
 
-  Future<GetRecoveryDart?> getTransferFun() async {
+  Future<GoTransferDart?> getTransferFun() async {
     final _dylib = await getLib();
 
     if (_dylib != null) {
@@ -353,6 +355,7 @@ class NativeLib {
     String str3 = args['str3']??'';
     String string4 = args['string4']??'';
     String str5 = args['str5']??'';
+    String str6 = args['str6']??'';
     final namePtr = name.toNativeUtf8();
     final goString = malloc<GoString>();
     goString.ref
@@ -395,6 +398,11 @@ class NativeLib {
       ..p = params6
       ..n = params6.length;
 
+    final params7 = str6.toNativeUtf8();
+    final goString7 = malloc<GoString>();
+    goString7.ref
+      ..p = params7
+      ..n = params7.length;
     final fun = await getTransferFun();
     RSResult? result;
     if (fun != null) {
@@ -406,6 +414,7 @@ class NativeLib {
         goString4.ref,
         goString5.ref,
         goString6.ref,
+        goString7.ref,
       );
     } else {
       result = null;
@@ -434,6 +443,9 @@ class NativeLib {
 
     malloc.free(params6);
     malloc.free(goString6);
+
+    malloc.free(params7);
+    malloc.free(goString7);
     return result;
   }
 
