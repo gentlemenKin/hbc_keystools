@@ -178,6 +178,7 @@ class _TransferPageState extends State<TransferPage> {
     _MemoController.addListener(() {
       if (showMemo) {
         if (_MemoController.text.trim().isEmpty) {
+
         } else {
           if (_MemoController.text.toString().length <= 30 && _MemoController.text.toString().contains(RegExp(r'^[a-zA-Z0-9]+$'))) {
             showError9 = false;
@@ -496,7 +497,7 @@ class _TransferPageState extends State<TransferPage> {
                             MemeRight = false;
                           }
                         } else {
-                          MemeRight = false;
+                          MemeRight = true;
                         }
                       }
                       if (_transferRpcController.text.toString().isNotEmpty &&
@@ -596,12 +597,12 @@ class _TransferPageState extends State<TransferPage> {
                         if (_transferAddressController.text.toString().isEmpty) {
                           showError4 = true;
                         }
-                        if (_MemoController.text.toString().isEmpty ||
-                            _MemoController.text.toString().length <= 30 ||
-                            _MemoController.text.toString().contains(RegExp(r'^[a-zA-Z0-9]+$'))) {
-                          showError9 = true;
+                        if(_MemoController.text.toString().isNotEmpty){
+                          if (_MemoController.text.toString().length <= 30 ||
+                              _MemoController.text.toString().contains(RegExp(r'^[a-zA-Z0-9]+$'))) {
+                            showError9 = true;
+                          }
                         }
-
                         setState(() {});
                       }
                     },
